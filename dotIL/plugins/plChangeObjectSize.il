@@ -1,35 +1,5 @@
 printf("\tLoading bind keys to change size of objects...\n")
 
-procedure( DILCustomRoutingObjectWidth(k)
-let( (l w)
-	case( dilIsDrawingType
-	("path"
-		w = leGetEnv("pathWidth")
-		l = car(leGetEntryLayer())
-		leSetEnv("pathWidth" DILCalculateNewWidth(k l w))
-	)
-	("wire"
-		w = leGetEnv("wireWidth")
-		l = car(leGetEntryLayer())
-		leSetEnv("wireWidth" DILCalculateNewWidth(k l w))
-	)
-	)
-);let
-);procedure
-
-procedure( DILRoutingObjectWidth(k)
-let( (shape shapes l w m ms)
-	shapes = geGetSelSet()
-	foreach( shape shapes
-		if( shape~>objType == "path" || shape~>objType == "pathSeg" then
-			l = shape~>layerName
-			w = shape~>width
-			shape~>width = DILCalculateNewWidth(k l w)
-		)
-	)
-);let
-);procedure
-
 procedure( DILCalculateNewWidth(k l w)
 prog( (m ms a b c)
 	if( !member(l dilMetals) then
@@ -52,12 +22,37 @@ prog( (m ms a b c)
 );prog
 );procedure
 
+procedure( DILChangeNewObjectSize(k)
+let( (l w envVar)
+	envVar = sprintf(nil "%sWidth" dilIsDrawingType)
+	w = leGetEnv(envVar)
+	l = car(leGetEntryLayer())
+	leSetEnv(envVar DILCalculateNewWidth(k l w))
+	)
+);let
+);procedure
+
+procedure( DILChangeExistedObjectSize(k)
+let( (obj objs l w)
+	objs = geGetSelSet()
+	foreach( obj objs
+		case( obj~>objType
+			( "path" || "wire" || "pathSeg"
+				l = obj~>layerName
+				w = obj~>width
+				obj~>width = DILCalculateNewWidth(k l w)	
+			)
+		)
+	)
+);let
+);procedure
+
 procedure( DILChangeObjectSize(k)
 let( ()
 	if( dilIsDrawing then
-		DILCustomRoutingObjectWidth(k)
+		DILChangeNewObjectSize(k)
 	else
-		DILRoutingObjectWidth(k)
+		DILChangeExistedObjectSize(k)
 	)
 );let
 );procedure
