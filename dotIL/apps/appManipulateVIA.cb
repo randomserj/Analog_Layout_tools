@@ -1,0 +1,50 @@
+procedure( cbVIAMove(o action m)
+let( (orig new s test)
+	orig = o~>origin
+	s = techGetMfgGridResolution(dilTechFile) * m
+	case( action
+		( "u" new = list(car(orig) cadr(orig)+s) )
+		( "d" new = list(car(orig) cadr(orig)-s) )
+		( "l" new = list(car(orig)-s cadr(orig)) )
+		( "r" new = list(car(orig)+s cadr(orig)) )
+	)
+	obj~>origin = new
+);let
+);procedure
+
+procedure( cbAddStackVIA(o action)
+let( (cv techViaDefs techViaNames name stackViaNames i is vs newViaName n (add nil) (isCreated nil))	
+	cv = geGetEditCellView()
+	techViaDefs = lxGetValidViaDefs(dilTechFile "virtuosoDefaultSetup")
+	if( action then techViaDefs = reverse(techViaDefs) )
+	techViaNames = techViaDefs~>name
+	is = dbGetOverlaps( cv o~>bBox nil )
+	vs = setof(i is i~>objType == "stdVia" && i != o)
+	stackViaNames = vs~>viaHeader~>viaDefName
+	for( n 0 length(techViaNames)-1
+		newViaName = nth( n techViaNames )
+		when( newViaName && !member(newViaName stackViaNames) && add && !isCreated  
+			dbCreateVia(
+				cv
+				nth( n techViaDefs )
+				o~>origin
+				o~>orient
+				o~>viaHeader~>overrideParams
+			)
+			isCreated = t
+		)
+		if( newViaName == o~>viaHeader~>viaDefName then add = t )
+	)
+);let
+);procedure
+
+procedure( cbRemStackVIA(o)
+let( (cv i is v vs)
+	cv = geGetEditCellView()
+	is = dbGetOverlaps( cv o~>bBox nil )
+	vs = setof(i is i~>objType == "stdVia" && i != o)
+	foreach( v vs dbDeleteObject(v) )
+
+);let
+);procedure
+

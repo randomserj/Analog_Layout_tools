@@ -1,4 +1,4 @@
-printf("\tLoading bind keys to change size of objects...\n")
+printf("\tLoading bind keys to change width of objects...\n")
 
 procedure( DILCalculateNewWidth(k l w)
 prog( (m ms a b c)
@@ -28,12 +28,11 @@ let( (l w envVar)
 	w = leGetEnv(envVar)
 	l = car(leGetEntryLayer())
 	leSetEnv(envVar DILCalculateNewWidth(k l w))
-	)
 );let
 );procedure
 
 procedure( DILChangeExistedObjectSize(k)
-let( (obj objs l w)
+let( (obj objs l w params)
 	objs = geGetSelSet()
 	foreach( obj objs
 		case( obj~>objType

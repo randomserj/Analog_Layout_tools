@@ -35,7 +35,7 @@ let( ()
 
 procedure( DILLoadSKILL()
 let( (path dir dirs file files)
-	dirs = list( "/menus/" "/items/" "/plugins/" )
+	dirs = list( "/plugins/" "/apps/" )
 	foreach( dir dirs
 		path = strcat( dilHome dir)
 		files = cddr( sort( getDirFiles(path) nil ) )
