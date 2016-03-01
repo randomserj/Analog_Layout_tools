@@ -5,6 +5,9 @@ let( (obj)
 		( "stdVia"
 			DILManipulateVIA(obj)
 		)
+		( "path"
+			DILManipulatePath(obj)
+		)
 	)
 );let
 );procedure

@@ -27,9 +27,9 @@
 ***
 *******************************************************************/
 
-procedure( DILChangesLog()
+procedure( DILAbout()
 let( ()
-	edit( strcat( dilHome "/changes.log" ) )
+	edit( strcat( dilHome "/info.txt" ) )
 );let
 );procedure
 
@@ -54,6 +54,7 @@ let(
 	tf viaDefs viaDef via vias params i a b c d
 )
 	printf("[INFO] Initializing .il plugins\n")
+	createDir( strcat(getWorkingDir() "/.il") )
 	tLibName = getShellEnvVar("TLIB_NAME")
 	if( tLibName then
 		printf("\tGetting informaition from %s tech file...\n" tLibName)
