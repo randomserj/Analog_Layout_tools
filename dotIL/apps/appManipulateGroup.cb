@@ -32,7 +32,7 @@ let( (cv bnd bBox xC yC lbl)
 		"centerCenter"
 		"R0" 
 		"roman"
-		lDILGetRectHeight(fig)/2 
+		cadr(lDILGetRectDimensions(fig))/2 
 	)
 	leAttachFig(
 		lbl

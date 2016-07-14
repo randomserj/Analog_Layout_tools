@@ -1,5 +1,3 @@
-printf("\tLoading bind keys for mark/unmark a net...\n")
-
 procedure( DILGetShapeAndHierarchy(shape)
 prog( (s h)
 	s = shape

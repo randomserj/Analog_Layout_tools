@@ -27,6 +27,20 @@
 	
 *******************************************************************/
 
+procedure( DILLoadSKILL()
+let( (path dir dirs file files)
+	dirs = list( "/plugins/" "/apps/" )
+	foreach( dir dirs
+		path = strcat( dilHome dir)
+		files = cddr( sort( getDirFiles(path) nil ) )
+		foreach( file files
+			;printf("[Milandr VRN] Loading %s\n" file)
+			if( !cdr(parseString(file "-")) then load(strcat(path file)) )
+		)
+	)	
+);let
+);procedure
+
 procedure( DILAbout()
 let( (file line (info "") (endOfInfo nil))
 	;edit( strcat( dilHome "/info.txt" ) )
@@ -46,27 +60,13 @@ let( (file line (info "") (endOfInfo nil))
 );let
 );procedure
 
-procedure( DILLoadSKILL()
-let( (path dir dirs file files)
-	dirs = list( "/plugins/" "/apps/" )
-	foreach( dir dirs
-		path = strcat( dilHome dir)
-		files = cddr( sort( getDirFiles(path) nil ) )
-		foreach( file files
-			printf("[Milandr VRN] Loading %s\n" file)
-			if( !cdr(parseString(file "-")) then load(strcat(path file)) )
-		)
-	)	
-);let
-);procedure
-
 procedure( DILInit()
 let(
 (
 	tLibName layer layers
 	tf viaDefs viaDef via vias params i a b c d
 )
-	printf("[INFO] Initializing .il plugins\n")
+	printf("[Milandr VRN] Initializing .il plugins\n")
 	createDir( strcat(getWorkingDir() "/.il") )
 	tLibName = getShellEnvVar("TLIB_NAME")
 	if( tLibName then

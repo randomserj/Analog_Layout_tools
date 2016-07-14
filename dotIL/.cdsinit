@@ -23,5 +23,5 @@ let( (itemInit itemLog menuDIL)
 			)
 	)
 	hiInsertBannerMenu( window(1) menuDIL hiGetNumMenus(window(1)) )
-	printf("[INFO] Menu \".il\" has been added to CIW\n")
+	printf("[Milandr VRN] Menu \".il\" has been added to CIW\n")
 );let
