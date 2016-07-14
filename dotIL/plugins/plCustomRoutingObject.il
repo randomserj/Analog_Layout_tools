@@ -1,13 +1,4 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;		Custom routing objects
-;;; v1.0
-;;;	-key p for custom path
-;;;	-key ctrl+p for custom wire
-;;;	-key shift+p for multipart path !!! NOT WORKING
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-printf("\tLoading custom routing objects...\n")
+;printf("\tLoading custom routing objects...\n")
 
 dilIsDrawing = nil
 dilIsDrawingType = ""

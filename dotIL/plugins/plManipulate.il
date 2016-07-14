@@ -8,6 +8,9 @@ let( (obj)
 		( "path"
 			DILManipulatePath(obj)
 		)
+		( "figGroup"
+			DILManipulateGroup(obj)
+		)
 	)
 );let
 );procedure

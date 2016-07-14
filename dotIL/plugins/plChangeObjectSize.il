@@ -1,4 +1,4 @@
-printf("\tLoading bind keys to change width of objects...\n")
+;printf("\tLoading bind keys to change width of objects...\n")
 
 procedure( DILCalculateNewWidth(k l w)
 prog( (m ms a b c)

@@ -1,35 +1,48 @@
 /*******************************************************************
-***
-***	    	   	    *   *
-***	        		*
-***	    	    	    *   *
-***			*   *   *
-***
-***	Features:
-***	- Added [ and ] bindkeys to change path or wire width 
-***	  of either existed or during drawing;
-***	- Added 1..9 bindkeys to toggle metals+vias visiability 
-***	  and ctrl+1..9 to add/remove metal+via 
-***	  to/from visiability list;
-***	- Added 0 binkey to show/hide FEOL layers
-***	  and ctrl+0 to add/remove FEOL latyers
-***	  to/from visiability list;
-***	- Added ` bindkey to show all layers;
-***	- Added \ and shift+\ bindkeys to mark net
-***	  in the hierarchy;
-***
-********************************************************************
+	
+                                    *   *
+                                        *
+                                    *   *
+                                *   *   *
+	
+	Features:
+	- bindkeys [ and ] to change path or wire width 
+	  of either existed or during drawing;
+	- bindkeys 1..9 to toggle metals+vias visiability 
+	  and ctrl+1..9 to add/remove metal+via 
+	  to/from visiability list;
+	- bindkey 0 to show/hide FEOL layers
+	  and ctrl+0 to add/remove FEOL latyers
+	  to/from visiability list;
+	- bindkey ` to show all layers;
+	- bindkeys \ and shift+\ bindkeys to mark a net
+	  in the hierarchy;
+	- bindkey ; to manipulate an object
 
-********************************************************************
-***	
-***	v1.1.4.2 (18/09/2105)
-***	- Added hierarchical mark the net.
-***
+*******************************************************************
+	
+	v1.2.1.1 (12/07/2106)
+	- !!!WIP!!! A form to manipulate groups
+	- fixed button "About"
+	
 *******************************************************************/
 
 procedure( DILAbout()
-let( ()
-	edit( strcat( dilHome "/info.txt" ) )
+let( (file line (info "") (endOfInfo nil))
+	;edit( strcat( dilHome "/info.txt" ) )
+	file = infile( strcat(dilHome "/.il") )
+	when( file
+		while( gets(line file)
+			when( line == "\n" endOfInfo = t )
+			when( !endOfInfo && !rexMatchp("^/.*$" line) sprintf(info "%s%s" info line) )
+		)
+	)
+	hiDisplayAppDBox( 
+		?name 'About 
+		?dboxText info
+		?buttonLayout 'Close
+ 	)
+	;printf("%s" info)
 );let
 );procedure
 
@@ -40,7 +53,7 @@ let( (path dir dirs file files)
 		path = strcat( dilHome dir)
 		files = cddr( sort( getDirFiles(path) nil ) )
 		foreach( file files
-			;printf("[INFO] Loading %s%s\n" path file)
+			printf("[Milandr VRN] Loading %s\n" file)
 			if( !cdr(parseString(file "-")) then load(strcat(path file)) )
 		)
 	)	

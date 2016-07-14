@@ -1,4 +1,4 @@
-printf("\tLoading routing layers visiability bind keys...\n")
+;printf("\tLoading routing layers visiability bind keys...\n")
 
 procedure( DILToggleLayerVisiability0(key @optional ctrl)
 let( (mode l ls)

@@ -2,7 +2,7 @@
 dilHome = strcat( "/home/pakhomov.s/skill/dotIL" )
 load( strcat( dilHome "/.il" ) )
 
-let( (itemInit menuDIL)
+let( (itemInit itemLog menuDIL)
 	ciwMenuInit()
 	itemInit = hiCreateMenuItem(
 			?name 'itemInit
