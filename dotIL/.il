@@ -12,7 +12,7 @@
 	  and ctrl+1..9 to add/remove metal+via 
 	  to/from visiability list;
 	- bindkey 0 to show/hide FEOL layers
-	  and ctrl+0 to add/remove FEOL latyers
+	  and ctrl+0 to add/remove FEOL layers
 	  to/from visiability list;
 	- bindkey ` to show all layers;
 	- bindkeys \ and shift+\ bindkeys to mark a net
@@ -21,21 +21,20 @@
 
 *******************************************************************
 	
-	v1.2.1.1 (12/07/2106)
-	- !!!WIP!!! A form to manipulate groups
-	- fixed button "About"
+	v2.2.01 (17/07/2106)
 	
 *******************************************************************/
 
 procedure( DILLoadSKILL()
 let( (path dir dirs file files)
-	dirs = list( "/plugins/" "/apps/" )
+	dirs = list( "plugins" "forms" "callbacks")
 	foreach( dir dirs
-		path = strcat( dilHome dir)
+		path = strcat( dilHome "/" dir)
+		printf("\tLoading %s\n" dir)
 		files = cddr( sort( getDirFiles(path) nil ) )
 		foreach( file files
 			;printf("[Milandr VRN] Loading %s\n" file)
-			if( !cdr(parseString(file "-")) then load(strcat(path file)) )
+			if( !cdr(parseString(file "-")) then load(strcat(path "/" file)) )
 		)
 	)	
 );let
