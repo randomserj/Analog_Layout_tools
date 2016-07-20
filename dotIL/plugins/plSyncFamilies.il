@@ -1,13 +1,12 @@
 procedure( DILSyncFamilies()
-let( ((obj nil) families)
+let( ((obj nil))
 
-	dilSyncClonesFormTabH = 10
-	dilSyncClonesFormTabV = 10
+	dilSyncFamiliesFormTabH = 10
+	dilSyncFamiliesFormTabV = 10
 	
 	when( length(geGetSelSet()) == 1 obj = car(geGetSelSet()) )
 	when( obj~>objType == "figGroup"
-		dilFamilies = geGetEditCellView()~>families
-		DILSyncFamiliesForm(obj families)
+		DILSyncFamiliesForm(obj)
 	)
 );let
 );procedure
