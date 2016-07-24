@@ -21,22 +21,31 @@
 
 *******************************************************************
 	
-	v2.2.03 (17/07/2106)
+	v2.2.04
 	
-	- Fixed "Update Family" callback
+	- Fixed loading main files
+	- Fixed callback "Update Familys"
+	- Added DILPrintInfo procedure
 	
 *******************************************************************/
+
+dilPrefix = "[.il]"
+
+procedure( DILPrintInfo(s)
+let( ()
+	printf("%s %s\n" dilPrefix s)
+);let
+);procedure
 
 procedure( DILLoadSKILL()
 let( (path dir dirs file files)
 	dirs = list( "plugins" "forms" "callbacks")
 	foreach( dir dirs
 		path = strcat( dilHome "/" dir)
-		printf("\tLoading %s\n" dir)
+		DILPrintInfo( strcat("Loading " dir) )
 		files = cddr( sort( getDirFiles(path) nil ) )
 		foreach( file files
-			;printf("[Milandr VRN] Loading %s\n" file)
-			if( !cdr(parseString(file "-")) then load(strcat(path "/" file)) )
+			if( !cdr(parseString(file "-")) then loadi(strcat(path "/" file)) )
 		)
 	)	
 );let
@@ -44,7 +53,6 @@ let( (path dir dirs file files)
 
 procedure( DILAbout()
 let( (file line (info "") (endOfInfo nil))
-	;edit( strcat( dilHome "/info.txt" ) )
 	file = infile( strcat(dilHome "/.il") )
 	when( file
 		while( gets(line file)
@@ -57,7 +65,6 @@ let( (file line (info "") (endOfInfo nil))
 		?dboxText info
 		?buttonLayout 'Close
  	)
-	;printf("%s" info)
 );let
 );procedure
 
@@ -67,11 +74,10 @@ let(
 	tLibName layer layers
 	tf viaDefs viaDef via vias params i a b c d
 )
-	printf("[Milandr VRN] Initializing .il plugins\n")
 	createDir( strcat(getWorkingDir() "/.il") )
 	tLibName = getShellEnvVar("TLIB_NAME")
 	if( tLibName then
-		printf("\tGetting informaition from %s tech file...\n" tLibName)
+		DILPrintInfo( strcat("Getting informaition from " tLibName " tech file") )
 		dilTechFile = techGetTechFile(ddGetObj(tLibName))
 		layers = techGetLayerFunctions(dilTechFile)
 		dilDiff = list()

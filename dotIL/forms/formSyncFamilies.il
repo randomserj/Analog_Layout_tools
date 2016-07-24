@@ -25,6 +25,20 @@ let( (cv)
 );let
 );procedure
 
+procedure( DILRotateObject(o rot)
+let( (cv x0 y0 x1 y1 dx dy)
+	cv = geGetEditCellView()
+	x0 = car(o~>origin)
+	y0 = cadr(o~>origin)
+	dbMoveFig( o cv list(list(0 0) rot 1) )
+	x1 = car(o~>origin)
+	y1 = cadr(o~>origin)
+	dx = x0 - x1
+	dy = y0 - y1
+	dbMoveFig( o cv list(list(dx dy) "R0" 1) )
+);let
+);procedure
+
 procedure( DILUpdateFamily(o)
 let( (cv family g gs f fig newFigs oldFigs orient dx dy)
 	if( o~>dilFamily then
@@ -39,12 +53,14 @@ let( (cv family g gs f fig newFigs oldFigs orient dx dy)
 				newFigs = o~>figs
 				oldFigs = g~>figs
 				foreach( fig newFigs
-					f = dbCopyFig( fig cv list(list(dx dy) orient 1) )
+					f = dbCopyFig( fig cv list(list(dx dy) "R0" 1) )
 					dbAddFigToFigGroup(g f)	
 				)
 				foreach( fig oldFigs
 					dbDeleteObject(fig)
 				)
+				DILRotateObject(g orient)
+				g~>orient = orient
 			)
 		)
 	else
