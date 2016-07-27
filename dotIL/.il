@@ -21,11 +21,9 @@
 
 *******************************************************************
 	
-	v2.2.04
+	v2.3.01
 	
-	- Fixed loading main files
-	- Fixed callback "Update Familys"
-	- Added DILPrintInfo procedure
+	-Common manipulate form to move. Bindkey - F3
 	
 *******************************************************************/
 
@@ -80,6 +78,8 @@ let(
 		DILPrintInfo( strcat("Getting informaition from " tLibName " tech file") )
 		dilTechFile = techGetTechFile(ddGetObj(tLibName))
 		layers = techGetLayerFunctions(dilTechFile)
+		dilFormTabV = 10
+		dilFormTabH = 10
 		dilDiff = list()
 		dilImps = list()
 		dilPolys = list()

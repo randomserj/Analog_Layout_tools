@@ -1,24 +1,12 @@
 procedure( DILManipulate()
-let( (obj)
-
-	dilFormULX = 0
-	dilFormULY = 0
-	dilFormTabW = 10
-	dilFormTabH = 10
-	
+let( (cv obj)
+	cv = geGetEditCellView()
 	obj = car(geGetSelSet())
-	case( obj~>objType
-		( "stdVia"
-			DILManipulateVIA(obj)
-		)
-		( "path"
-			DILManipulatePath(obj)
-		)
-		( "figGroup"
-			DILManipulateGroup(obj)
-		)
+	unless( boundp('dilManipulateForm)
+		DILManipulateForm(cv obj)
 	)
+	hiDisplayForm(dilManipulateForm)
 );let
 );procedure
 
-hiSetBindKey( "Layout" "<Key>;" "DILManipulate()" )
+hiSetBindKey( "Layout" "<Key>F3" "DILManipulate()" )
