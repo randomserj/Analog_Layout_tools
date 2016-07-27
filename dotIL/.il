@@ -21,13 +21,27 @@
 
 *******************************************************************
 	
-	v2.3.01
+	v2.3.02
 	
-	-Common manipulate form to move. Bindkey - F3
+	- Added procedure DILGlobaVar() to declare global variables
+	- Added "Rotate" frame to the Manipulate form
 	
 *******************************************************************/
 
-dilPrefix = "[.il]"
+procedure( DILGlobalVar()
+let( ()
+	dilPrefix = "[.il]"
+	dilFormGrid = 10
+	dilTechFile = nil
+	dilDiff = list()
+	dilImps = list()
+	dilPolys = list()
+	dilWells = list()
+	dilMetals = list()
+	dilVias = list()
+	dilMetalWidthList = list()	;;; <----- list with metal name, minWidth=width of Mx to Mx+1 VIA and VIA + step to increse width, e.g. list( list(0.13 0.07+0.09) )
+);let
+);procedure
 
 procedure( DILPrintInfo(s)
 let( ()
@@ -78,14 +92,6 @@ let(
 		DILPrintInfo( strcat("Getting informaition from " tLibName " tech file") )
 		dilTechFile = techGetTechFile(ddGetObj(tLibName))
 		layers = techGetLayerFunctions(dilTechFile)
-		dilFormTabV = 10
-		dilFormTabH = 10
-		dilDiff = list()
-		dilImps = list()
-		dilPolys = list()
-		dilWells = list()
-		dilMetals = list()
-		dilVias = list()
 		foreach( layer layers
 			if( cadr(layer) == "poly" then dilPolys = append1(dilPolys car(layer)) )
 			if( cadr(layer) == "metal" then dilMetals = append1(dilMetals car(layer)) )
@@ -94,8 +100,6 @@ let(
 			if( cadr(layer) == "nplus" || cadr(layer) == "pplus" then dilImps = append1(dilImps car(layer)) )
 			if( cadr(layer) == "nwell" then dilWells = append1(dilWells car(layer)) )
 		)
-		
-		dilMetalWidthList = list()	;;; <----- list with metal name, minWidth=width of Mx to Mx+1 VIA and VIA + step to increse width, e.g. list( list(0.13 0.07+0.09) )
 		vias = cdr(dilVias)		;;; <----- we don't need to keep "CO"
 		viaDefs = lxGetValidViaDefs(dilTechFile "virtuosoDefaultSetup")
 		for( i 0 length(vias)-1
