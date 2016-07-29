@@ -3,8 +3,8 @@ let( 	(
 		(field nil) (fields nil) (w 30) (h 30) (p 30) (x0 0) (y0 0) dx dy size
 	)
 	
-	dx = dilFormTabV
-	dy = dilFormTabH
+	dx = dilFormGrid
+	dy = dilFormGrid
 	size = list(
 			2*dx + 5*w
 			9*h + 6*dy
@@ -29,7 +29,7 @@ let( 	(
 				?labelText "Rotate"
 			)
 			x0 : 6*h + 5*dy
-			5*w + 2*dx : 1*h + 2*dy
+			5*w + 2*dx : 1*h + 4*dy
 			p
 		)
 	fields = append1(fields field)
@@ -137,6 +137,52 @@ let( 	(
 	fields = append1(fields field)
 	
 ;;;;;;;; Rotate
+
+	field = list(
+			hiCreateButton(
+				?name 'bL90
+				?buttonText "L90"
+				?callback "MISCTransformRotate( obj \"R90\" )"
+			)
+			dx: 6*h + 7*dy
+			w : h
+		)
+	fields = append1(fields field)
+	
+	field = list(
+			hiCreateButton(
+				?name 'bR90
+				?buttonText "R90"
+				?callback "MISCTransformRotate( obj \"R270\" )"
+			)
+			4*w + dx: 6*h + 7*dy
+			w : h
+		)
+	fields = append1(fields field)
+	
+	field = list(
+			hiCreateButton(
+				?name 'bMX
+				?buttonText "MX"
+				?callback "MISCTransformRotate( obj \"MX\" )"
+			)
+			1*w + dx: 6*h + 7*dy
+			w : h
+		)
+	fields = append1(fields field)
+	
+	field = list(
+			hiCreateButton(
+				?name 'bMY
+				?buttonText "MY"
+				?callback "MISCTransformRotate( obj \"MY\" )"
+			)
+			3*w + dx: 6*h + 7*dy
+			w : h
+		)
+	fields = append1(fields field)
+	
+;;;;;;;; Main Form
 	
 	hiCreateAppForm(
 		?name 'dilManipulateForm

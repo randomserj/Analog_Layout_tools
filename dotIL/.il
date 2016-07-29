@@ -19,29 +19,22 @@
 	  in the hierarchy;
 	- bindkey ; to manipulate an object
 
-*******************************************************************
-	
-	v2.3.02
-	
-	- Added procedure DILGlobaVar() to declare global variables
-	- Added "Rotate" frame to the Manipulate form
-	
 *******************************************************************/
 
-procedure( DILGlobalVar()
-let( ()
-	dilPrefix = "[.il]"
-	dilFormGrid = 10
-	dilTechFile = nil
-	dilDiff = list()
-	dilImps = list()
-	dilPolys = list()
-	dilWells = list()
-	dilMetals = list()
-	dilVias = list()
-	dilMetalWidthList = list()	;;; <----- list with metal name, minWidth=width of Mx to Mx+1 VIA and VIA + step to increse width, e.g. list( list(0.13 0.07+0.09) )
-);let
-);procedure
+
+
+dilPrefix = "[.il]"
+dilFormGrid = 10
+dilTechFile = nil
+dilDiff = list()
+dilImps = list()
+dilPolys = list()
+dilWells = list()
+dilMetals = list()
+dilVias = list()
+dilMetalWidthList = list()	;;; <----- list with metal name, minWidth=width of Mx to Mx+1 VIA and VIA + step to increse width, e.g. list( list(0.13 0.07+0.09) )
+
+
 
 procedure( DILPrintInfo(s)
 let( ()
@@ -51,7 +44,7 @@ let( ()
 
 procedure( DILLoadSKILL()
 let( (path dir dirs file files)
-	dirs = list( "plugins" "forms" "callbacks")
+	dirs = list( "plugins" "forms" "callbacks" "misc")
 	foreach( dir dirs
 		path = strcat( dilHome "/" dir)
 		DILPrintInfo( strcat("Loading " dir) )

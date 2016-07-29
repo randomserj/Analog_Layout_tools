@@ -1,1 +1,5 @@
-    v1.1.01
+v2.3.03
+	
+	- Added rotate and mirror features to the Manipulate form
+	- Removed DILGlobalVar() procedure
+	- Added folder "misc" for common code
