@@ -1,3 +1,5 @@
-v2.4.02
+v2.4.03
 	
-	- Fixed .version file
+	- Changed plugin ManipulateVIA to SmartVia
+	- Removed manipulate buttons from the SmartVia form
+	- Changed the name of DILManipulateFormMoveCB to DILManipulateCBMove

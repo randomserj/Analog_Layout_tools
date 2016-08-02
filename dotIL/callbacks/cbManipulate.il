@@ -1,4 +1,4 @@
-procedure( DILManipulateFormMoveCB(cv obj action m)
+procedure( DILManipulateCBMove(cv obj action m)
 let( (origin shift s test)
 	origin = obj~>origin
 	s = m * dilManipulateForm~>flShift~>value

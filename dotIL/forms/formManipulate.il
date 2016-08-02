@@ -52,7 +52,7 @@ let( 	(
 			hiCreateButton(
 				?name 'bMoveUpDef
 				?buttonText "U"
-				?callback "DILManipulateFormMoveCB( cv obj \"u\" 1 )"
+				?callback "DILManipulateCBMove( cv obj \"u\" 1 )"
 			)
 			2*w + dx : 2*h + 3*dy
 			w : h
@@ -63,7 +63,7 @@ let( 	(
 			hiCreateButton(
 				?name 'bMoveDownDef
 				?buttonText "D"
-				?callback "DILManipulateFormMoveCB( cv obj \"d\" 1 )"
+				?callback "DILManipulateCBMove( cv obj \"d\" 1 )"
 			)
 			2*w + dx : 4*h + 3*dy
 			w : h
@@ -74,7 +74,7 @@ let( 	(
 			hiCreateButton(
 				?name 'bMoveLeftDef
 				?buttonText "L"
-				?callback "DILManipulateFormMoveCB( cv obj \"l\" 1 )"
+				?callback "DILManipulateCBMove( cv obj \"l\" 1 )"
 			)
 			1*w + dx : 3*h + 3*dy
 			w : h
@@ -85,7 +85,7 @@ let( 	(
 			hiCreateButton(
 				?name 'bMoveRightDef
 				?buttonText "R"
-				?callback "DILManipulateFormMoveCB( cv obj \"r\" 1 )"
+				?callback "DILManipulateCBMove( cv obj \"r\" 1 )"
 			)
 			3*w + dx : 3*h + 3*dy
 			w : h
@@ -96,7 +96,7 @@ let( 	(
 			hiCreateButton(
 				?name 'bMoveUp5x
 				?buttonText "x5"
-				?callback "DILManipulateFormMoveCB( cv obj \"u\" 5 )"
+				?callback "DILManipulateCBMove( cv obj \"u\" 5 )"
 			)
 			2*w + dx: 1*h + 3*dy
 			w : h
@@ -107,7 +107,7 @@ let( 	(
 			hiCreateButton(
 				?name 'bMoveDown5x
 				?buttonText "x5"
-				?callback "DILManipulateFormMoveCB( cv obj \"d\" 5 )"
+				?callback "DILManipulateCBMove( cv obj \"d\" 5 )"
 			)
 			2*w + dx : 5*h + 3*dy
 			w : h
@@ -118,7 +118,7 @@ let( 	(
 			hiCreateButton(
 				?name 'bMoveLeft5x
 				?buttonText "x5"
-				?callback "DILManipulateFormMoveCB( cv obj \"l\" 5 )"
+				?callback "DILManipulateCBMove( cv obj \"l\" 5 )"
 			)
 			0*w + dx : 3*h + 3*dy
 			w : h
@@ -129,7 +129,7 @@ let( 	(
 			hiCreateButton(
 				?name 'bMoveRight5x
 				?buttonText "x5"
-				?callback "DILManipulateFormMoveCB( cv obj \"r\" 5 )"
+				?callback "DILManipulateCBMove( cv obj \"r\" 5 )"
 			)
 			4*w + dx: 3*h + 3*dy
 			w : h
