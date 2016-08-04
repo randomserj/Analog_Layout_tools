@@ -2,7 +2,9 @@ procedure( DILSmartVia()
 let( (obj)
 	obj = car(geGetSelSet())
 	when( obj~>objType == "stdVia"
-		DILSmartViaForm(obj)
+		unless( boundp('dilSmartViaForm) && hiIsFormDisplayed(dilSmartViaForm)
+			DILSmartViaForm(obj)
+		)
 		hiDisplayForm('dilSmartViaForm)
 	)
 );let

@@ -64,20 +64,16 @@ let( 	(
 		?name 'cTemplatesVIA
 		?items DILSmartViaGetTemplates(dilSmartViaFile)
 		?editable t
+		?callback "DILSmartViaCBLoadTemplate(obj dilSmartViaFile)"
 	)
 	bSaveTemplatesVIA = hiCreateButton(
 		?name 'bTest
 		?buttonText "Save"
-		?callback "DILSmartViaCBSaveTemplate(obj dilSmartViaForm~>cTemplatesVIA~>value dilSmartViaFile) dilSmartViaForm~>cTemplatesVIA~>items = DILSmartViaGetTemplates(dilSmartViaFile)"
-	)
-	bLoadTemplatesVIA = hiCreateButton(
-		?name 'bTestL
-		?buttonText "Load"
-		?callback "DILSmartViaCBLoadTemplate(obj dilSmartViaForm~>cTemplatesVIA~>value dilSmartViaFile)"
+		?callback "DILSmartViaCBSaveTemplate(obj dilSmartViaFile)"
 	)
 	lLoadTemplatesVIA = hiCreateLabel(
 		?name 'lLoadTemplatesVIA
-		?labelText "."
+		?labelText "loaded"
 		?invisible t
 	)
 	
@@ -93,7 +89,7 @@ let( 	(
 		?wrapAround nil
 		?editable t
 		?obeyWidth t
-		?callback "DILSmartViaCBApply(obj)"
+		?callback "DILSmartViaCBGeneralApply(obj)"
 	)
 	sColumnsVIA = hiCreateSpinBox(
 		?name 'sColumnsVIA
@@ -103,7 +99,7 @@ let( 	(
 		?wrapAround nil
 		?editable t
 		?obeyWidth t
-		?callback "DILSmartViaCBApply(obj)"
+		?callback "DILSmartViaCBGeneralApply(obj)"
 	)
 	sRowsSpVIA = hiCreateFloatSpinBox(
 		?name 'sRowsSpVIA
@@ -114,7 +110,7 @@ let( 	(
 		?precision 3
 		?wrapAround nil
 		?editable t
-		?callback "DILSmartViaCBApply(obj)"
+		?callback "DILSmartViaCBGeneralApply(obj)"
 	)
 	sColumnsSpVIA = hiCreateFloatSpinBox(
 		?name 'sColumnsSpVIA
@@ -125,7 +121,7 @@ let( 	(
 		?precision 3
 		?wrapAround nil
 		?editable t
-		?callback "DILSmartViaCBApply(obj)"
+		?callback "DILSmartViaCBGeneralApply(obj)"
 	)
 	
 	fEncVIA = hiCreateFrameField(
@@ -141,7 +137,7 @@ let( 	(
 		?precision 3
 		?wrapAround nil
 		?editable t
-		?callback "cbEncVVIA(obj)"
+		?callback "DILSmartViaCBEnclosuresApply(obj)"
 	)
 	sEncHVIA = hiCreateFloatSpinBox(
 		?name 'sEncHVIA
@@ -152,13 +148,7 @@ let( 	(
 		?precision 3
 		?wrapAround nil
 		?editable t
-		?callback "cbEncHVIA(obj)"
-	)
-	
-	bApplyVIA = hiCreateButton(
-		?name 'bApplyVIA
-		?buttonText "Apply"
-		?callback ""
+		?callback "DILSmartViaCBEnclosuresApply(obj)"
 	)
 	
 	ulX = 0
@@ -185,7 +175,7 @@ let( 	(
 	bTmplH = 30
 	
 	fGenX = ulX
-	fGenY = bTmplY + 2*bTmplH + 3*tabH
+	fGenY = bTmplY + 1*bTmplH + 2*tabH
 	fGenW = 3*bStackW+4*tabW
 	fGenH = 90
 	
@@ -205,7 +195,7 @@ let( 	(
 		?fields list(
 			list(fStackVIA		bStackX-tabW:bStackY-2*tabH		3*bStackW+4*tabW:bStackH+4*tabH		30)
 			;list(fLayerVIA		bLayerX-tabW:bLayerY-2*tabH		bLayerW+2*tabW:3*bLayerH+3*tabH		30)
-			list(fTemplatesVIA	bTmplX-tabW:bTmplY-2*tabH		3*bStackW+4*tabW:2*bTmplH+5*tabH	30)
+			list(fTemplatesVIA	bTmplX-tabW:bTmplY-2*tabH		3*bStackW+4*tabW:bTmplH+4*tabH		30)
 			list(fGeneralVIA	fGenX:fGenY				3*bStackW+4*tabW:fGenH			30)
 			list(fEncVIA		fEncX:fEncY				3*bStackW+4*tabW:fEncH			30)
 			
@@ -213,9 +203,8 @@ let( 	(
 			list(bAddBelowStackVIA	bStackX+1*bStackW+1*tabW:bStackY	bStackW:bStackH)
 			list(bRemoveStackVIA	bStackX+2*bStackW+2*tabW:bStackY	bStackW:bStackH)
 			
-			list(cTemplatesVIA	bTmplX:bTmplY				3*bStackW+2*tabW:bTmplH			10)
-			list(bSaveTemplatesVIA	bStackX+0*bStackW+0*tabW:bTmplY+1*bTmplH+1*tabH		bTmplW:bTmplH)
-			list(bLoadTemplatesVIA	bStackX+2*bStackW+2*tabW:bTmplY+1*bTmplH+1*tabH		bTmplW:bTmplH)
+			list(cTemplatesVIA	bTmplX:bTmplY-3				2*bStackW+1*tabW:bTmplH			10)
+			list(bSaveTemplatesVIA	bStackX+2*bStackW+2*tabW:bTmplY		bTmplW:bTmplH)
 			list(lLoadTemplatesVIA	0:0					10:10					10)
 			
 			list(sRowsVIA		fGenX+tabW:fGenY+2*tabH			120:bTmplH				60)
@@ -225,8 +214,7 @@ let( 	(
 			
 			list(sEncVVIA		fEncX+tabW:fEncY+2*tabH			120:bTmplH				60)
 			list(sEncHVIA		fGenW-120-tabW:fEncY+2*tabH		120:bTmplH				60)
-			
-			;list(bApplyVIA		280:bTmplY+7*bTmplH+tabH		bTmplW:bTmplH)	
+	
 		)
 	)
 );let

@@ -1,5 +1,6 @@
-v2.4.03
+v2.4.04
 	
-	- Changed plugin ManipulateVIA to SmartVia
-	- Removed manipulate buttons from the SmartVia form
-	- Changed the name of DILManipulateFormMoveCB to DILManipulateCBMove
+	- Autoload when select via template
+	- Fixed "Save" button
+	- Fixed SmartVia form creating
+	- Deleted unused code

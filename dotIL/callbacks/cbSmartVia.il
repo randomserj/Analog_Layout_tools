@@ -34,10 +34,13 @@ let( (cv i is v vs)
 );let
 );procedure
 
-procedure( DILSmartViaCBSaveTemplate(o name f)
-let( (file param params pName pType pValue)
+procedure( DILSmartViaCBSaveTemplate(o f)
+let( (form name names file param params pName pType pValue)
+	form = dilSmartViaForm
+	names = DILSmartViaGetTemplates(dilSmartViaFile)
+	name = form~>cTemplatesVIA~>value
 	file = outfile(f "a")
-	when( file && name != ""
+	when( file && name != "" && !member(name names)
 		fprintf( file "name=%s\n" name)
 		params = o~>viaHeader~>overrideParams
 		foreach( param params
@@ -47,15 +50,19 @@ let( (file param params pName pType pValue)
 			fprintf( file "%s//%s//%L\n" pName pType pValue)
 		)
 		fprintf( file "\n" name)
-		printf("[INFO] New VIA template %s has been saved\n" name)
+		DILPrintInfo( strcat("New VIA template " name " has been saved") )
 	)
 	close(file)
+	form~>cTemplatesVIA~>items = names
 );let
 );procedure
 
-procedure( DILSmartViaCBLoadTemplate(o name f)
-let( (file line param pName pType pValue pValues pV (read nil) form)
+procedure( DILSmartViaCBLoadTemplate(o f)
+let( (form name file line param pName pType pValue pValues pV (read nil))
+	form = dilSmartViaForm
+	name = form~>cTemplatesVIA~>value
 	file = infile(f)
+	form~>lLoadTemplatesVIA~>value = "loading"
 	when( file && name != ""
 		while( gets(line file)
 			line = strncat( "" line strlen(line)-1 )
@@ -78,50 +85,39 @@ let( (file line param pName pType pValue pValues pV (read nil) form)
 			)
 			when( line == strcat("name=" name) read = t )
 		)
-		form = hiGetCurrentForm()
-		form~>lLoadTemplatesVIA~>labelText = "loading"
 		form~>sRowsVIA~>value = o~>cutRows
 		form~>sColumnsVIA~>value = o~>cutColumns
 		form~>sRowsSpVIA~>value = car(o~>cutSpacing)
 		form~>sColumnsSpVIA~>value = cadr(o~>cutSpacing)
 		form~>sEncHVIA~>value = car(o~>layer1Enc)
 		form~>sEncVVIA~>value = cadr(o~>layer1Enc)
-		form~>lLoadTemplatesVIA~>labelText = ""
 	)
 	close(file)
+	form~>lLoadTemplatesVIA~>value = "loaded"
 );let
 );procedure
 
-procedure( cbEncVVIA(o)
-let( (form p)
-	form = hiGetCurrentForm()
-	p = form~>sEncVVIA~>value
-	o~>layer1Enc = list( car(o~>layer1Enc) p )
-	o~>layer2Enc = list( car(o~>layer2Enc) p )
-	o~>layer1Offset = list( car(o~>layer1Offset) 0 )
-	o~>layer2Offset = list( car(o~>layer2Offset) 0 )
+procedure( DILSmartViaCBEnclosuresApply(o)
+let( (form h v)
+	form = dilSmartViaForm
+	when( form~>lLoadTemplatesVIA~>value == "loaded"
+		h = form~>sEncHVIA~>value
+		v = form~>sEncVVIA~>value
+		o~>layer1Enc = list( h v )
+		o~>layer2Enc = list( h v )
+		form~>cTemplatesVIA~>value = ""
+	)
 );let
 );procedure
 
-procedure( cbEncHVIA(o)
-let( (form p)
-	form = hiGetCurrentForm()
-	p = form~>sEncHVIA~>value
-	o~>layer1Enc = list( p cadr(o~>layer1Enc) )
-	o~>layer2Enc = list( p cadr(o~>layer2Enc) )
-	o~>layer1Offset = list( 0 cadr(o~>layer1Offset) )
-	o~>layer2Offset = list( 0 cadr(o~>layer2Offset) )
-);let
-);procedure
-
-procedure( DILSmartViaCBApply(o)
+procedure( DILSmartViaCBGeneralApply(o)
 let( (form loading)
-	form = hiGetCurrentForm()
-	loading = form~>lLoadTemplatesVIA~>labelText
-	when( loading != "loading"
+	form = dilSmartViaForm
+	when( form~>lLoadTemplatesVIA~>value == "loaded"
 		o~>cutRows = form~>sRowsVIA~>value
 		o~>cutColumns = form~>sColumnsVIA~>value
 		o~>cutSpacing = list( form~>sRowsSpVIA~>value form~>sColumnsSpVIA~>value )
+		form~>cTemplatesVIA~>value = ""
 	)
 );let
 );procedure
