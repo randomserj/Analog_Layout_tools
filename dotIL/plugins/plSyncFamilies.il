@@ -4,9 +4,12 @@ let( ((obj nil))
 	dilSyncFamiliesFormTabH = 10
 	dilSyncFamiliesFormTabV = 10
 	
-	when( length(geGetSelSet()) == 1 obj = car(geGetSelSet()) )
+	obj = car(geGetSelSet())
 	when( obj~>objType == "figGroup"
-		DILSyncFamiliesForm(obj)
+		unless( boundp('dilSyncFamiliesForm) && hiIsFormDisplayed(dilSyncFamiliesForm)
+			DILSyncFamiliesForm(obj)
+		)
+		hiDisplayForm(dilSyncFamiliesForm)
 	)
 );let
 );procedure

@@ -1,74 +1,3 @@
-procedure( DILCreateFamily(o fs)
-let( (cv)
-	if( !o~>dilFamily then
-		cv = geGetEditCellView()
-		if( fs then fs++ else fs = 1	)
-		o~>dilFamily = fs
-		cv~>dilFamilies = fs
-	else
-		printf("[WARNING] Selected group is a SyncFamily already")
-	)
-);let
-);procedure
-
-procedure( DILRemoveFromFamily(o fs)
-let( (cv)
-	if( o~>dilFamily then
-		dbDeletePropByName(
-			o
-			"dilFamily"
-		)
-		cv = geGetEditCellView()
-	else
-		printf("[WARNING] Selected group is not a SyncFamily member")
-	)
-);let
-);procedure
-
-procedure( DILRotateObject(o rot)
-let( (cv x0 y0 x1 y1 dx dy)
-	cv = geGetEditCellView()
-	x0 = car(o~>origin)
-	y0 = cadr(o~>origin)
-	dbMoveFig( o cv list(list(0 0) rot 1) )
-	x1 = car(o~>origin)
-	y1 = cadr(o~>origin)
-	dx = x0 - x1
-	dy = y0 - y1
-	dbMoveFig( o cv list(list(dx dy) "R0" 1) )
-);let
-);procedure
-
-procedure( DILUpdateFamily(o)
-let( (cv family g gs f fig newFigs oldFigs orient dx dy)
-	if( o~>dilFamily then
-		cv = geGetEditCellView()
-		family = o~>dilFamily
-		gs = cv~>figGroups
-		foreach( g gs
-			when( g~>dilFamily == family && g != o
-				orient = g~>orient
-				dx = car(g~>origin) - car(o~>origin)
-				dy = cadr(g~>origin) - cadr(o~>origin)
-				newFigs = o~>figs
-				oldFigs = g~>figs
-				foreach( fig newFigs
-					f = dbCopyFig( fig cv list(list(dx dy) "R0" 1) )
-					dbAddFigToFigGroup(g f)	
-				)
-				foreach( fig oldFigs
-					dbDeleteObject(fig)
-				)
-				DILRotateObject(g orient)
-				g~>orient = orient
-			)
-		)
-	else
-		printf("[WARNING] Selected group is not a SyncFamily member")
-	)
-);let
-);procedure
-
 procedure( DILSyncFamiliesForm(obj)
 let(	(
 		cv families
@@ -78,9 +7,6 @@ let(	(
 		bSyncFamilyX bSyncFamilyY bSyncFamilyW bSyncFamilyH	
 	)
 	
-	cv = geGetEditCellView()
-	families = cv~>dilFamilies
-	
 	fSyncFamily = hiCreateFrameField(
 		?name 'fSyncFamily
 		?labelText "SyncFamily"
@@ -89,19 +15,19 @@ let(	(
 	bCreateSyncFamily = hiCreateButton(
 		?name 'bCreateSyncFamily
 		?buttonText "Create Family"
-		?callback "DILCreateFamily(obj families)"
+		?callback "DILSyncFamiliesCreate(obj)"
 	)
 	
 	bRemoveFromSyncFamily = hiCreateButton(
 		?name 'bRemoveFromSyncFamily
 		?buttonText "Remove from Family"
-		?callback "DILRemoveFromFamily(obj families)"
+		?callback "DILSyncFamiliesRemove(obj)"
 	)
 	
 	bUpdateSyncFamily = hiCreateButton(
 		?name 'bUpdateSyncFamily
 		?buttonText "Update Family"
-		?callback "DILUpdateFamily(obj)"
+		?callback "DILSyncFamiliesUpdate(obj)"
 	)
 	
 	bSyncFamilyX = dilSyncFamiliesFormTabH
@@ -117,7 +43,7 @@ let(	(
 	size = list(fSyncFamiliesW fSyncFamiliesH+4*dilSyncFamiliesFormTabH)
 	
 		hiCreateAppForm(
-			?name 'syncFamiliesForm
+			?name 'dilSyncFamiliesForm
 			?formTitle "SyncFamily"
 			?buttonLayout 'Close
 			?initialSize size
@@ -130,13 +56,5 @@ let(	(
 				list( bUpdateSyncFamily			bSyncFamilyX:bSyncFamilyY+2*bSyncFamilyH					bSyncFamilyW:bSyncFamilyH		)
 			)
 		)
-	hiDisplayForm(syncFamiliesForm)
 );let
 );procedure
-
-/*procedure( DILSyncFamiliesForm(obj)
-	if( boundp('syncFamiliesForm) && hiIsFormDisplayed(syncFamiliesForm)
-		hiFormDone(syncFamiliesForm)
-	)
-	hiEnqueueCmd("DILCreateSyncFamiliesForm(obj)")
-);procedure*/
