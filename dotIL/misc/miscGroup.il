@@ -49,3 +49,31 @@ let( (orient orients angle)
 	
 );let
 );procedure
+
+;;;;;;;;;
+;;; Attaches a lable from the property to the group
+;;;;;;;;;
+procedure( MISCGroupAttachLabel(group)
+let( (cv bnd bBox xC yC h label)
+	cv = group~>cellView
+	bnd = MISCGroupGetBoundary(group)
+	bBox = bnd~>bBox
+	xC = car(MISCCalcGetCenter(bBox))
+	yC = cadr(MISCCalcGetCenter(bBox))
+	h = atof(sprintf( nil "%.2f" car(MISCCalcGetDimensions(bBox))/2 ))
+	label = dbCreateLabel(
+		cv
+		list("text" "drawing")
+		list(xC yC)
+		group~>dilLabel
+		"centerCenter"
+		"R0" 
+		"roman"
+		h
+	)
+	leAttachFig(
+		label
+		group
+	)
+);let
+);procedure

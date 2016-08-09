@@ -1,7 +1,5 @@
-v2.4.05
-	
-	- Fixed "Update Family" button
-	- Fixed SyncFamilies form creating
-	- Added procedure to rotate a group to R0
-	- Fixed MISCGroupGetBoundary() procedure
-	- Created file for SyncFamilies callbacks
+v2.5.01
+
+	- Added alpha version of the SmartArray plugin and form. Bindkey - F4
+	- Added callbacks file for the SmartArray plugin
+	- Added MISCGroupAttachLabel() procedure
