@@ -1,5 +1,5 @@
-v2.5.01
+v2.5.02
 
-	- Added alpha version of the SmartArray plugin and form. Bindkey - F4
-	- Added callbacks file for the SmartArray plugin
-	- Added MISCGroupAttachLabel() procedure
+	- Fixed creating dilSmartArrayForm
+	- Changed SmartArray plugin, works on selected instances in schematic
+	- Fixed callbacks for SyncFamilies

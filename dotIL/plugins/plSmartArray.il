@@ -1,14 +1,15 @@
 procedure( DILSmartArray()
-let( (objs rows columns elements)
+let( (obj objs alphabet elements nA nO (names nil))
+	alphabet = list("A" "B" "C" "D" "E" "F" "G" "H")
 	objs = geGetSelSet()
-	rows = 4
-	columns = 4
-	elements = list("d" "A" "B" "C" "D")
-	;unless( boundp('formSmartArray)
-		DILSmartArrayForm(objs elements rows columns)
-	;)
-	hiDisplayForm(formSmartArray)
+	nA = length(alphabet)
+	nO = length(objs)
+	dilElements = reverse(nthcdr(nA-nO reverse(alphabet)))
+	unless( boundp('dilSmartArrayInitForm) && hiIsFormDisplayed(dilSmartArrayInitForm)
+		DILSmartArrayInitForm(objs)
+	)
+	hiDisplayForm(dilSmartArrayInitForm)
 );let
 );procedure
 
-hiSetBindKey( "Layout" "<Key>F4" "DILSmartArray()" )
+hiSetBindKey( "Schematics" "<Key>F4" "DILSmartArray()" )

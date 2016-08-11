@@ -1,4 +1,4 @@
-procedure( DILSyncFamiliesCreate(o)
+procedure( DILSyncFamiliesCBCreate(o)
 let( (cv fs)
 	cv = o~>cellView
 	fs = cv~>dilFamilies
@@ -13,7 +13,7 @@ let( (cv fs)
 );let
 );procedure
 
-procedure( DILSyncFamiliesRemove(o)
+procedure( DILSyncFamiliesCBRemove(o)
 let( ()
 	if( o~>dilFamily then
 		dbDeletePropByName(
@@ -26,7 +26,7 @@ let( ()
 );let
 );procedure
 
-procedure( DILSyncFamiliesUpdate(o)
+procedure( DILSyncFamiliesCBUpdate(o)
 let( (cv family g gs fig newFig newFigs oldFigs orient dx dy)
 	cv = o~>cellView
 	family = o~>dilFamily
