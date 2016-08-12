@@ -15,19 +15,19 @@ let(	(
 	bCreateSyncFamily = hiCreateButton(
 		?name 'bCreateSyncFamily
 		?buttonText "Create Family"
-		?callback "DILSyncFamiliesCreate(obj)"
+		?callback "DILSyncFamiliesCBCreate(obj)"
 	)
 	
 	bRemoveFromSyncFamily = hiCreateButton(
 		?name 'bRemoveFromSyncFamily
 		?buttonText "Remove from Family"
-		?callback "DILSyncFamiliesRemove(obj)"
+		?callback "DILSyncFamiliesCBRemove(obj)"
 	)
 	
 	bUpdateSyncFamily = hiCreateButton(
 		?name 'bUpdateSyncFamily
 		?buttonText "Update Family"
-		?callback "DILSyncFamiliesUpdate(obj)"
+		?callback "DILSyncFamiliesCBUpdate(obj)"
 	)
 	
 	bSyncFamilyX = dilSyncFamiliesFormTabH

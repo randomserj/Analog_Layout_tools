@@ -1,4 +1,4 @@
-procedure( DILSmartArrayInitForm(os)
+procedure( DILSmartArrayForm(os)
 let( (o field (fields nil) (i 0) (ns nil) m)
 	foreach( o os
 		m = o~>numInst
@@ -37,7 +37,7 @@ let( (o field (fields nil) (i 0) (ns nil) m)
 	fields = append1( fields list(field 180:30*i 120:30	60) )
 	size = list(350 350)
 	hiCreateAppForm(
-		?name 'dilSmartArrayInitForm
+		?name 'dilSmartArrayForm
 		?formTitle "Smart Array"
 		?buttonLayout '(Close (SelectSyncFamily "DILSmartArrayCB()"))
 		?initialSize size

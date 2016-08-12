@@ -1,14 +1,17 @@
 procedure( DILSmartArray()
-let( (obj objs alphabet elements nA nO (names nil))
-	alphabet = list("A" "B" "C" "D" "E" "F" "G" "H")
-	objs = geGetSelSet()
-	nA = length(alphabet)
-	nO = length(objs)
-	dilElements = reverse(nthcdr(nA-nO reverse(alphabet)))
-	unless( boundp('dilSmartArrayInitForm) && hiIsFormDisplayed(dilSmartArrayInitForm)
-		DILSmartArrayInitForm(objs)
+let( (obj (objs nil) elements nA nO (names nil))
+	foreach( obj geGetSelSet()
+		when( obj~>objType == "inst" objs = append1(objs obj) )
 	)
-	hiDisplayForm(dilSmartArrayInitForm)
+	when( objs
+		nA = length(dilAlphabet)
+		nO = length(objs)
+		dilElements = reverse(nthcdr(nA-nO reverse(dilAlphabet)))
+		unless( boundp('dilSmartArrayForm) && hiIsFormDisplayed(dilSmartArrayForm)
+			DILSmartArrayForm(objs)
+		)
+		hiDisplayForm(dilSmartArrayForm)
+	)
 );let
 );procedure
 

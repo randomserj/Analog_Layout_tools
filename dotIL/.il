@@ -34,6 +34,7 @@ dilMetals = list()
 dilVias = list()
 dilMetalWidthList = list()	;;; <----- list with metal name, minWidth=width of Mx to Mx+1 VIA and VIA + step to increse width, e.g. list( list(0.13 0.07+0.09) )
 dilSmartViaFile = strcat( getWorkingDir() "/.il/vias.tmpl" )
+dilAlphabet = list("A" "B" "C" "D" "E" "F" "G" "H")
 
 
 

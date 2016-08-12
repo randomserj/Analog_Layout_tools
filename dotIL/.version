@@ -1,5 +1,5 @@
-v2.5.02
+v2.5.03
 
-	- Fixed creating dilSmartArrayForm
-	- Changed SmartArray plugin, works on selected instances in schematic
-	- Fixed callbacks for SyncFamilies
+	- Fixed SmartArray plugin
+	- Added global varible dilAlphabet
+	- Fixed SyncFamilies form
