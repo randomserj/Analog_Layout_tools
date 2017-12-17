@@ -1,5 +1,12 @@
-v2.5.03
+v3.0.00
 
-	- Fixed SmartArray plugin
-	- Added global varible dilAlphabet
-	- Fixed SyncFamilies form
+	- added menu item to load configuration from ./.il/config
+	  that contains:
+	      [tech] tech library name;
+		  [grid] custom grid;
+		  [metals] list of metals;
+		  [pins] pin layers;
+	- main menu code moved to .il file
+	- DILInit() executes only if tLibName is defined
+	- changed DILPrintInfo() -> DILPrint() and added optional argument
+	  to print either INFO or WARNING or ERROR before the message

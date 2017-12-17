@@ -1,28 +1,2 @@
-;dilHome = strcat( skillHome "/dotIL" )
-dilHome = strcat( "/home/pakhomov.s/skill/dotIL" )
-
+dilHome = strcat( skillHome "/dotIL" )
 load( strcat( dilHome "/.il" ) )
-
-let( (itemInit itemLog menuDIL)
-	ciwMenuInit()
-	itemInit = hiCreateMenuItem(
-			?name 'itemInit
-			?itemText "Initializtion"
-			?callback "DILInit() DILLoadSKILL()"
-	)
-	itemLog = hiCreateMenuItem(
-			?name 'itemILog
-			?itemText "About"
-			?callback "DILAbout()"
-	)
-	menuDIL = hiCreatePulldownMenu( 
-			'menuDIL
-			".il"
-			list(
-				itemInit
-				itemLog
-			)
-	)
-	hiInsertBannerMenu( window(1) menuDIL hiGetNumMenus(window(1)) )
-	printf( "[Milandr VRN] Menu \".il\" has been added to CIW\n" )
-);let

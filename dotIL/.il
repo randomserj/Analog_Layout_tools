@@ -1,15 +1,15 @@
 /*******************************************************************
-	
+
                                     *   *
                                         *
                                     *   *
                                 *   *   *
-	
+
 	Features:
-	- bindkeys [ and ] to change path or wire width 
+	- bindkeys [ and ] to change path or wire width
 	  of either existed or during drawing;
-	- bindkeys 1..9 to toggle metals+vias visiability 
-	  and ctrl+1..9 to add/remove metal+via 
+	- bindkeys 1..9 to toggle metals+vias visiability
+	  and ctrl+1..9 to add/remove metal+via
 	  to/from visiability list;
 	- bindkey 0 to show/hide FEOL layers
 	  and ctrl+0 to add/remove FEOL layers
@@ -17,7 +17,6 @@
 	- bindkey ` to show all layers;
 	- bindkeys \ and shift+\ bindkeys to mark a net
 	  in the hierarchy;
-	- bindkey ; to manipulate an object
 
 *******************************************************************/
 
@@ -26,21 +25,23 @@
 dilPrefix = "[.il]"
 dilFormGrid = 10
 dilTechFile = nil
+dilGrid = nil
 dilDiff = list()
 dilImps = list()
 dilPolys = list()
 dilWells = list()
 dilMetals = list()
+dilPins = list()
 dilVias = list()
 dilMetalWidthList = list()	;;; <----- list with metal name, minWidth=width of Mx to Mx+1 VIA and VIA + step to increse width, e.g. list( list(0.13 0.07+0.09) )
 dilSmartViaFile = strcat( getWorkingDir() "/.il/vias.tmpl" )
-dilAlphabet = list("A" "B" "C" "D" "E" "F" "G" "H")
+dilAlphabet = list("A" "B" "C" "D" "E" "F" "G" "H" "I" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T")
 
 
 
-procedure( DILPrintInfo(s)
+procedure( DILPrint(message @optional messageType)
 let( ()
-	printf("%s %s\n" dilPrefix s)
+	printf("%s\t*** %L ***\t\t%s\n" dilPrefix messageType message)
 );let
 );procedure
 
@@ -49,47 +50,28 @@ let( (path dir dirs file files)
 	dirs = list( "plugins" "forms" "callbacks" "misc")
 	foreach( dir dirs
 		path = strcat( dilHome "/" dir)
-		DILPrintInfo( strcat("Loading " dir) )
+		DILPrint( strcat("Loading " dir) "INFO"  )
 		files = cddr( sort( getDirFiles(path) nil ) )
 		foreach( file files
 			if( !cdr(parseString(file "-")) then loadi(strcat(path "/" file)) )
 		)
-	)	
-);let
-);procedure
-
-procedure( DILAbout()
-let( (file line (info "") (endOfInfo nil))
-	file = infile( strcat(dilHome "/.il") )
-	when( file
-		while( gets(line file)
-			when( line == "\n" endOfInfo = t )
-			when( !endOfInfo && !rexMatchp("^/.*$" line) sprintf(info "%s%s" info line) )
-		)
 	)
-	hiDisplayAppDBox( 
-		?name 'About 
-		?dboxText info
-		?buttonLayout 'Close
- 	)
 );let
 );procedure
 
 procedure( DILInit()
 let(
 (
-	tLibName layer layers
-	tf viaDefs viaDef via vias params i a b c d
+	layer layers
+	viaDefs viaDef via vias params i a b c d
 )
 	createDir( strcat(getWorkingDir() "/.il") )
-	tLibName = getShellEnvVar("TLIB_NAME")
-	if( tLibName then
-		DILPrintInfo( strcat("Getting informaition from " tLibName " tech file") )
-		dilTechFile = techGetTechFile(ddGetObj(tLibName))
+	if( dilTechFile then
+		DILPrint( strcat("Getting informaition from " dilTechFile~>libName " tech file") "INFO")
 		layers = techGetLayerFunctions(dilTechFile)
 		foreach( layer layers
 			if( cadr(layer) == "poly" then dilPolys = append1(dilPolys car(layer)) )
-			if( cadr(layer) == "metal" then dilMetals = append1(dilMetals car(layer)) )
+			;if( cadr(layer) == "metal" then dilMetals = append1(dilMetals car(layer)) )
 			if( cadr(layer) == "cut" then dilVias = append1(dilVias car(layer)) )
 			if( cadr(layer) == "diff" then dilDiff = append1(dilDiff car(layer)) )
 			if( cadr(layer) == "nplus" || cadr(layer) == "pplus" then dilImps = append1(dilImps car(layer)) )
@@ -110,10 +92,84 @@ let(
 			)
 		)
 		dilMetalWidthList = append1(dilMetalWidthList list(car(reverse(dilMetals)) a b) )
-		
+		DILLoadSKILL()
 	else
-		printf("[ERROR] Tech library is missed\n")
+		DILPrint( "Tech library is missed" "ERROR" )
 	)
 );let
 );procedure
 
+procedure( DILLoadConfig()
+let( (file line (info "") (toRead nil) block)
+	;file = infile( strcat(getWorkingDir() "/.il/config") )
+	file = infile(strcat(getShellEnvVar("HOME") "/cdns/config")) ;; for developing
+	when( file
+		while( gets(line file)
+			if( line != "\n" then line = car(parseString(line "\n")) else toRead = nil )
+			when( toRead
+				case( block
+					("tech" when( ddGetObj(line) dilTechFile = techGetTechFile(ddGetObj(line))))
+					("grid" dilGrid = atof(line))
+					("metals" dilMetals = parseString(line))
+					("pins" dilPins = parseString(line))
+				)
+			)
+			when( rexMatchp("^[[].*[]]$" line)
+				toRead = t
+				block = car(parseString(line "[]"))
+			)
+		)
+		DILInit()
+	)
+);let
+);procedure
+
+procedure( DILAbout()
+let( (file line (info "") (endOfInfo nil))
+	file = infile( strcat(dilHome "/.il") )
+	when( file
+		while( gets(line file)
+			when( line == "\n" endOfInfo = t )
+			when( !endOfInfo && !rexMatchp("^/.*$" line) sprintf(info "%s%s" info line) )
+		)
+	)
+	hiDisplayAppDBox(
+		?name 'About
+		?dboxText info
+		?buttonLayout 'Close
+ 	)
+);let
+);procedure
+
+
+
+/*** Adding main menu to CIW ***/
+let( (items)
+	ciwMenuInit()
+	items = list(
+			hiCreateMenuItem(
+				?name 'itemInit
+				?itemText "Initializtion"
+				?callback "DILInit()"
+			)
+			hiCreateMenuItem(
+				?name 'itemLoadConfig
+				?itemText "Load Config"
+				?callback "DILLoadConfig()"
+			)
+			hiCreateMenuItem(
+				?name 'itemILog
+				?itemText "About"
+				?callback "DILAbout()"
+			)
+	)
+
+	menuDIL = hiCreatePulldownMenu(
+			'menuDIL
+			".il"
+			items
+	)
+	if( hiInsertBannerMenu( window(1) menuDIL hiGetNumMenus(window(1)) )
+		DILPrint( "Menu \".il\" has been added to CIW" "INFO" )
+	)
+);let
