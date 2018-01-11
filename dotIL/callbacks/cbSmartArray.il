@@ -1,12 +1,11 @@
 procedure( DILSmartArrayCBChange(row column)
-let( (formName text e es (index 0))
+let( (formName text o (index 0))
 	formName = symbolToString( hiGetCurrentForm()~>hiFormSym )
 	text = evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" formName row column) )
-	es = append( list(" " "d") dilElements )
-	foreach( e es
-		if( e == text then
-			when( index >= length(es)-1 index = -1 ) 
-			evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText=\"%s\"" formName row column nth(index+1 es)) )
+	foreach( o dilSmartArrayElements
+		if( o == text then
+			when( index >= length(dilSmartArrayElements)-1 index = -1 )
+			evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText=\"%s\"" formName row column nth(index+1 dilSmartArrayElements)) )
 		)
 		index++
 	)
@@ -38,51 +37,44 @@ let( (form formName field (fields nil) prevR prevC curR curC)
 				?buttonText " "
 				?callback sprintf(nil "DILSmartArrayCBChange(%d %d)" i j)
 			)
-			fields = append1( fields list(field 30*i:150+30*j 30:30) )
+			fields = append1( fields list(field 30*i:30*(length(dilSmartArrayElements)+j) 30:30) )
 		)
 	)
 	when( fields hiAddFields(form fields) )
 );let
 );procedure
 
-procedure( DILSmartArrayCBLayout(g p)
-let( (form formName cv text i (j 0) dx dy s item items bnd fig)
-	cv = g~>cellView
-	bnd = MISCGroupGetBoundary(g)
-	dx = car( MISCCalcGetDimensions(bnd~>bBox) )
-	dy = cadr( MISCCalcGetDimensions(bnd~>bBox) )
-	foreach( s p
-		items = parseString(s "")
-		i = 0
-		foreach(item items
-			when(item != " " && i - j != 0
-				fig = dbCopyFig(
-					g
-					cv
-					list(
-						list(i*dx j*dy)
-						"R0"
-						1
+procedure( DILSmartArrayCBLayout(p)
+let( (string name names objs isFound (x 100) (y -100) dx dy bnd)
+	dy = 0
+	foreach( string p
+		names = parseString(string "-")
+		dx = 0
+		foreach(name names
+			isFound = nil
+			foreach(obj dilSmartArrayObjs
+				when( rexMatchp(sprintf(nil "^%s[. (]" name) car(obj~>figs~>baseName)) && !isFound
+					dilSmartArrayObjs = remove(obj dilSmartArrayObjs)
+					isFound = t
+					x = -1 * car(obj~>origin) + dx
+					y = -1 * cadr(obj~>origin) + dy
+					dbMoveFig( obj obj~>cellView list(list(x y) "R0" 1) )
+					bnd = MISCGroupGetBoundary(obj)
+					dx = dx + car( MISCCalcGetDimensions(bnd~>bBox) )
+					unless( obj~>dilLabel
+						obj~>dilLabel = name
+						MISCGroupAttachLabel(obj)
 					)
 				)
-				fig~>dilLabel = item
-				MISCGroupAttachLabel(fig)
 			)
-			i++
 		)
-		j--
+		dy = dy + cadr( MISCCalcGetDimensions(bnd~>bBox) )
 	)
-	g~>dilLabel = substring( car(p) 1 1 )
-	MISCGroupAttachLabel(g)
 );let
 );procedure
 
-procedure( DILSamrtArrayCBSetWindow(win)
-	geSetEnterFunctionSelectionMode(win 4)
-)
-
 procedure( DILSmartArrayCB()
-let( (form formName obj r c i j string (pattern nil) index point window)
+let( (form formName obj r c i j string (pattern nil))
 	form = hiGetCurrentForm()
 	formName = symbolToString( hiGetCurrentForm()~>hiFormSym )
 	r = form~>spRows~>value
@@ -90,23 +82,11 @@ let( (form formName obj r c i j string (pattern nil) index point window)
 	for(j 1 r
 		string = ""
 		for( i 1 c
-			string = buildString( list( string evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" formName i j) ) ) "" )
+			string = buildString( list( string evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" formName i j) ) ) "-" )
 		)
 		pattern = append1(pattern string)
 	)
-	window = hiPickWindow()
-	when( window 
-		hiSetCurrentWindow(window)
-		geDeselectAll()
-		point = enterPoint( ?prompts list("Select a group") )
-		when( point geAddSelectPoint(window nil point) )
-	)
-	obj = car(geGetSelSet())
-	if( obj~>objType == "figGroup" then
-		hiFormClose(form)
-		DILSmartArrayCBLayout(obj pattern)
-	else
-		DILPrintInfo("WARNING! You need to select a group")
-	)
+	pattern = reverse(pattern)		;; to layout array from top to bottom
+	DILSmartArrayCBLayout(pattern)
 );let
 );procedure

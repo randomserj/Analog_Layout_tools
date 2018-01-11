@@ -1,12 +1,6 @@
-v3.0.00
+v3.1.00
 
-	- added menu item to load configuration from ./.il/config
-	  that contains:
-	      [tech] tech library name;
-		  [grid] custom grid;
-		  [metals] list of metals;
-		  [pins] pin layers;
-	- main menu code moved to .il file
-	- DILInit() executes only if tLibName is defined
-	- changed DILPrintInfo() -> DILPrint() and added optional argument
-	  to print either INFO or WARNING or ERROR before the message
+	- changed SmartArray plugin. Works only with syncClones
+	- added a bindkey F5 to switch between grids.
+	  Reads value from [grid] in config file
+	- Fixed some bugs

@@ -1,5 +1,5 @@
 procedure( DILSmartViaCBAddStack(o action)
-let( (cv techViaDefs techViaNames name stackViaNames i is vs newViaName n (add nil) (isCreated nil))	
+let( (cv techViaDefs techViaNames name stackViaNames i is vs newViaName n (add nil) (isCreated nil))
 	cv = geGetEditCellView()
 	techViaDefs = lxGetValidViaDefs(dilTechFile "virtuosoDefaultSetup")
 	if( action then techViaDefs = reverse(techViaDefs) )
@@ -9,7 +9,7 @@ let( (cv techViaDefs techViaNames name stackViaNames i is vs newViaName n (add n
 	stackViaNames = vs~>viaHeader~>viaDefName
 	for( n 0 length(techViaNames)-1
 		newViaName = nth( n techViaNames )
-		when( newViaName && !member(newViaName stackViaNames) && add && !isCreated  
+		when( newViaName && !member(newViaName stackViaNames) && add && !isCreated
 			dbCreateVia(
 				cv
 				nth( n techViaDefs )
@@ -50,7 +50,7 @@ let( (form name names file param params pName pType pValue)
 			fprintf( file "%s//%s//%L\n" pName pType pValue)
 		)
 		fprintf( file "\n" name)
-		DILPrintInfo( strcat("New VIA template " name " has been saved") )
+		DILPrint( strcat("New VIA template " name " has been saved") "INFO" )
 	)
 	close(file)
 	form~>cTemplatesVIA~>items = names

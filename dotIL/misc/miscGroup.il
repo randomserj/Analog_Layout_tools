@@ -46,7 +46,7 @@ let( (orient orients angle)
 	when( angle == 360 angle = 0 )
 	orient = sprintf(nil "R%d" angle)
 	MISCGroupRotate( group orient )
-	
+
 );let
 );procedure
 
@@ -54,20 +54,22 @@ let( (orient orients angle)
 ;;; Attaches a lable from the property to the group
 ;;;;;;;;;
 procedure( MISCGroupAttachLabel(group)
-let( (cv bnd bBox xC yC h label)
+let( (cv bnd bBox dx dy xC yC h label)
 	cv = group~>cellView
 	bnd = MISCGroupGetBoundary(group)
 	bBox = bnd~>bBox
 	xC = car(MISCCalcGetCenter(bBox))
 	yC = cadr(MISCCalcGetCenter(bBox))
-	h = atof(sprintf( nil "%.2f" car(MISCCalcGetDimensions(bBox))/2 ))
+	dx = car(MISCCalcGetDimensions(bBox))
+	dy = cadr(MISCCalcGetDimensions(bBox))
+	h = atof(sprintf( nil "%.2f" min(dx dy)/4 ))
 	label = dbCreateLabel(
 		cv
 		list("text" "drawing")
 		list(xC yC)
 		group~>dilLabel
 		"centerCenter"
-		"R0" 
+		"R0"
 		"roman"
 		h
 	)

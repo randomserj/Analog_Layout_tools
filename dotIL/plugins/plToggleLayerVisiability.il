@@ -28,7 +28,7 @@ let( ()
 		leSetLayerVisible( nth(key-1 dilMetals) !leIsLayerVisible(nth(key-1 dilMetals)) )
 		leSetLayerVisible( nth(key-1 dilVias) !leIsLayerVisible(nth(key-1 dilMetals)) )
 	else
-		printf("[WARNING] Either %s or %s is selectable.\n" nth(key-1 dilMetals) nth(key-1 dilVias))
+		DILPrint( sprintf(nil "[WARNING] Either %s or %s is selected\n" nth(key-1 dilMetals) nth(key-1 dilVias)) "WARNING" )
 	)
 	dilLastPressedKey = ""
 );let
@@ -56,7 +56,7 @@ let( (l ls)
 	)
 	foreach( l ls
 		leSetLayerVisible(l t)
-		leSetLayerSelectable(l t)	
+		leSetLayerSelectable(l t)
 	)
 	hiRedraw(hiGetCurrentWindow())
 );let
@@ -73,4 +73,3 @@ let( (i limit)
 	hiSetBindKey("Layout" "<Key>0" "DILToggleLayerVisiability0(0)")
 	hiSetBindKey("Layout" "Ctrl<Key>0" "DILToggleLayerVisiability0(0 t)")
 );let
-

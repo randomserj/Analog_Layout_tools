@@ -1,12 +1,10 @@
-procedure( DILSmartArrayForm(os)
-let( (o field (fields nil) (i 0) (ns nil) m)
-	foreach( o os
-		m = o~>numInst
-		m = m * atof(o~>m)
-		m = truncate(m)
+procedure( DILSmartArrayForm(objs c)
+let( (obj field (fields nil) (i 0) (ns nil) m)
+	foreach( obj objs
+		m = c[obj]
 		field = hiCreateLabel(
 			?name stringToSymbol( sprintf(nil "lItem%d" i) )
-			?labelText sprintf(nil "%s\t%s\ttotal %d\tleft %d" o~>name nth(i dilElements) m m)
+			?labelText sprintf(nil "%s\t\ttotal %d\tleft %d" obj m m)
 		)
 		fields = append1( fields list(field 30:30*i 30:30) )
 		i++
@@ -39,11 +37,12 @@ let( (o field (fields nil) (i 0) (ns nil) m)
 	hiCreateAppForm(
 		?name 'dilSmartArrayForm
 		?formTitle "Smart Array"
-		?buttonLayout '(Close (SelectSyncFamily "DILSmartArrayCB()"))
+		?buttonLayout 'OKCancel
 		?initialSize size
 		?minSize size
 		?maxSize size
 		?fields fields
+		?callback "DILSmartArrayCB()"
 	)
 );let
 );procedure
