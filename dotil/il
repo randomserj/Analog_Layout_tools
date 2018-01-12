@@ -64,7 +64,7 @@ let( ()
 );procedure
 
 procedure( DILLoadConfig()
-let( (file line (info "") (toRead nil) block layer layers)
+let( (file line (info "") (toRead nil) block pin layer layers)
 	;file = infile( strcat(getWorkingDir() "/.il/config") )
 	file = infile(strcat(getShellEnvVar("HOME") "/cdns/config")) ;; for developing
 	when( file
@@ -75,7 +75,7 @@ let( (file line (info "") (toRead nil) block layer layers)
 					("tech" when( ddGetObj(line) dilTechFile = techGetTechFile(ddGetObj(line))))
 					("grid" dilGrid = atof(line))
 					("metals" dilMetals = parseString(line))
-					("pins" dilPins = parseString(line))
+					("pins" foreach( pin parseString(line) dilPins = append1(dilPins parseString(pin "."))))
 				)
 			)
 			when( rexMatchp("^[[].*[]]$" line)
@@ -115,9 +115,8 @@ let( (file line (info "") (endOfInfo nil))
 );let
 );procedure
 
-
-
 /*** Adding main menu to CIW ***/
+
 let( (items)
 	createDir( strcat(getWorkingDir() "/.il") )
 	ciwMenuInit()

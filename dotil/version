@@ -1,0 +1,6 @@
+v3.2.01
+
+	- removed "." from filenames of .il .cdsinit and .version
+	  to fix path for those files in the repo
+	- added toggling pins visibility
+	- fixed script name and names of procedures

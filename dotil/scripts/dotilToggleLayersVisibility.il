@@ -1,6 +1,6 @@
-;printf("\tLoading routing layers visiability bind keys...\n")
+;printf("\tLoading routing layers Visibility bind keys...\n")
 
-procedure( DILToggleLayerVisiability0(key @optional ctrl)
+procedure( DILToggleLayerVisibility0(key @optional ctrl)
 let( (mode l ls)
 	if( !ctrl then leSetEntryLayer( "text" ) )
 	mode = t
@@ -22,9 +22,9 @@ let( (mode l ls)
 );let
 );procedure
 
-procedure( DILToggleLayerVisiabilityCtrl(key)
+procedure( DILToggleLayerVisibilityCtrl(key)
 let( ()
-	if( !member(car(leGetEntryLayer()) list( nth(key-1 dilMetals) nth(key-1 dilVias) )) then
+	if( !member(car(leGetEntryLayer()) list( nth(key-1 dilMetals) nth(key-1 dilVias) nth(key-1 dilPins) )) then
 		leSetLayerVisible( nth(key-1 dilMetals) !leIsLayerVisible(nth(key-1 dilMetals)) )
 		leSetLayerVisible( nth(key-1 dilVias) !leIsLayerVisible(nth(key-1 dilMetals)) )
 	else
@@ -34,21 +34,21 @@ let( ()
 );let
 );procedure
 
-procedure( DILToggleLayerVisiability(key)
+procedure( DILToggleLayerVisibility(key)
 let( (l ls)
 	leSetEntryLayer( "text" )
 	leSetEntryLayer( nth(key-1 dilMetals) )
 	leSetAllLayerVisible(nil)
-	ls = list( nth(key-1 dilMetals) nth(key-1 dilVias) )
+	ls = list( nth(key-1 dilMetals) nth(key-1 dilVias) nth(key-1 dilPins) )
 	if( key == dilLastPressedKey then
 		if( key == 1 then
 			ls = append( ls dilPolys )
 		)
 		if( key > 1 then
-			ls = constar( nth(key-2 dilMetals) nth(key-2 dilVias) ls )
+			ls = constar( nth(key-2 dilMetals) nth(key-2 dilVias) nth(key-2 dilPins) ls )
 		)
 		if( key != length(dilMetals) then
-			ls = constar( nth(key dilMetals) nth(key dilVias) nth(key dilMetals) nth(key dilVias) ls )
+			ls = constar( nth(key dilMetals) nth(key dilVias) nth(key dilPins) nth(key dilMetals) nth(key dilVias) ls )
 		)
 		dilLastPressedKey = ""
 	else
@@ -66,10 +66,10 @@ let( (i limit)
 	dilLastPressedKey = ""
 	limit = min(9, length(dilMetals) - 1)
 	for( i 1 limit
-		hiSetBindKey("Layout" sprintf(nil "<Key>%d" i) sprintf(nil "DILToggleLayerVisiability(%d)" i))
-		hiSetBindKey("Layout" sprintf(nil "Ctrl<Key>%d" i) sprintf(nil "DILToggleLayerVisiabilityCtrl(%d)" i))
+		hiSetBindKey("Layout" sprintf(nil "<Key>%d" i) sprintf(nil "DILToggleLayerVisibility(%d)" i))
+		hiSetBindKey("Layout" sprintf(nil "Ctrl<Key>%d" i) sprintf(nil "DILToggleLayerVisibilityCtrl(%d)" i))
 	)
 	hiSetBindKey("Layout" "<Key>`" "leSetAllLayerVisible(t) leSetAllLayerSelectable(t) hiRedraw(hiGetCurrentWindow()) dilLastPressedKey = \"\"")
-	hiSetBindKey("Layout" "<Key>0" "DILToggleLayerVisiability0(0)")
-	hiSetBindKey("Layout" "Ctrl<Key>0" "DILToggleLayerVisiability0(0 t)")
+	hiSetBindKey("Layout" "<Key>0" "DILToggleLayerVisibility0(0)")
+	hiSetBindKey("Layout" "Ctrl<Key>0" "DILToggleLayerVisibility0(0 t)")
 );let

@@ -1,9 +1,0 @@
-v3.2.00
-
-	- changed folder structure. Root folder is now "dotil"
-	  All the working scripts are now in "./scripts" folder
-	  All the wip scripts are in "./wip"
-	- added procedure dotilWIP(<name_of_wip_script>) that loads specified script
-	  from "./wip". dotilWIP("list") shows names of wip scripts in CIW
-	- changed prefix of all the scripts to "dotil..."
-	- removed DILInit() procedure
