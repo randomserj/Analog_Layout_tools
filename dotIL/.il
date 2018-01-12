@@ -5,18 +5,18 @@
                                     *   *
                                 *   *   *
 
-	Features:
-	- bindkeys [ and ] to change path or wire width
-	  of either existed or during drawing;
-	- bindkeys 1..9 to toggle metals+vias visiability
-	  and ctrl+1..9 to add/remove metal+via
-	  to/from visiability list;
-	- bindkey 0 to show/hide FEOL layers
-	  and ctrl+0 to add/remove FEOL layers
-	  to/from visiability list;
-	- bindkey ` to show all layers;
-	- bindkeys \ and shift+\ bindkeys to mark a net
-	  in the hierarchy;
+	Bindkeys:
+
+	- <Key>F4 to build an array from syncClones
+	- <Key>; to load/save via templates and to add/remove stacks
+	- <KeyF5> to change grid
+	- <Key>1..9 to toggle metals+vias visiability
+	- ctrl<Key>1..9 to add/remove metal+via to/from visiability list
+	- <Key>0 to show/hide FEOL layers
+	- ctrl<Key>0 to add/remove FEOL layers to/from visiability list
+	- <Key>` to show all layers
+	- <Key>\ to mark a net in the hierarchy
+	- shift<Key>\ to remove all marked nets
 
 *******************************************************************/
 
@@ -47,60 +47,24 @@ let( ()
 
 procedure( DILLoadSKILL()
 let( (path dir dirs file files)
-	dirs = list( "plugins" "forms" "callbacks" "misc")
+	dirs = list( "scripts" "scripts/misc")
 	foreach( dir dirs
 		path = strcat( dilHome "/" dir)
 		DILPrint( strcat("Loading " dir) "INFO"  )
 		files = cddr( sort( getDirFiles(path) nil ) )
-		foreach( file files
-			if( !cdr(parseString(file "-")) then loadi(strcat(path "/" file)) )
-		)
+		foreach( file files loadi(strcat(path "/" file)) )
 	)
 );let
 );procedure
 
-procedure( DILInit()
-let(
-(
-	layer layers
-	viaDefs viaDef via vias params i a b c d
-)
-	createDir( strcat(getWorkingDir() "/.il") )
-	if( dilTechFile then
-		DILPrint( strcat("Getting informaition from " dilTechFile~>libName " tech file") "INFO")
-		layers = techGetLayerFunctions(dilTechFile)
-		foreach( layer layers
-			if( cadr(layer) == "poly" then dilPolys = append1(dilPolys car(layer)) )
-			;if( cadr(layer) == "metal" then dilMetals = append1(dilMetals car(layer)) )
-			if( cadr(layer) == "cut" then dilVias = append1(dilVias car(layer)) )
-			if( cadr(layer) == "diff" then dilDiff = append1(dilDiff car(layer)) )
-			if( cadr(layer) == "nplus" || cadr(layer) == "pplus" then dilImps = append1(dilImps car(layer)) )
-			if( cadr(layer) == "nwell" then dilWells = append1(dilWells car(layer)) )
-		)
-		vias = cdr(dilVias)		;;; <----- we don't need to keep "CO"
-		viaDefs = lxGetValidViaDefs(dilTechFile "virtuosoDefaultSetup")
-		for( i 0 length(vias)-1
-			via = nth(i vias)
-			foreach( viaDef viaDefs
-				params = viaDef~>params
-				if( car(params) == via && nth(i dilMetals) != c then
-					a = nth(1 params) + 2*car(nth(6 params))
-					b = nth(1 params) + car(nth(5 params))
-					c = nth(i dilMetals)
-					dilMetalWidthList = append1(dilMetalWidthList list(c a b))
-				)
-			)
-		)
-		dilMetalWidthList = append1(dilMetalWidthList list(car(reverse(dilMetals)) a b) )
-		DILLoadSKILL()
-	else
-		DILPrint( "Tech library is missed" "ERROR" )
-	)
+procedure( DILEditConfig()
+let( ()
+	DILPrint("The code is not yet ready :)" "WIP")
 );let
 );procedure
 
 procedure( DILLoadConfig()
-let( (file line (info "") (toRead nil) block)
+let( (file line (info "") (toRead nil) block layer layers)
 	;file = infile( strcat(getWorkingDir() "/.il/config") )
 	file = infile(strcat(getShellEnvVar("HOME") "/cdns/config")) ;; for developing
 	when( file
@@ -119,7 +83,20 @@ let( (file line (info "") (toRead nil) block)
 				block = car(parseString(line "[]"))
 			)
 		)
-		DILInit()
+		if( dilTechFile then
+			DILPrint( strcat("Getting informaition from " dilTechFile~>libName " tech file") "INFO")
+			layers = techGetLayerFunctions(dilTechFile)
+			foreach( layer layers
+				if( cadr(layer) == "poly" then dilPolys = append1(dilPolys car(layer)) )
+				if( cadr(layer) == "cut" then dilVias = append1(dilVias car(layer)) )
+				if( cadr(layer) == "diff" then dilDiff = append1(dilDiff car(layer)) )
+				if( cadr(layer) == "nplus" || cadr(layer) == "pplus" then dilImps = append1(dilImps car(layer)) )
+				if( cadr(layer) == "nwell" then dilWells = append1(dilWells car(layer)) )
+			)
+			DILLoadSKILL()
+		else
+			DILPrint( "Tech library is missed" "ERROR" )
+		)
 	)
 );let
 );procedure
@@ -130,14 +107,11 @@ let( (file line (info "") (endOfInfo nil))
 	when( file
 		while( gets(line file)
 			when( line == "\n" endOfInfo = t )
-			when( !endOfInfo && !rexMatchp("^/.*$" line) sprintf(info "%s%s" info line) )
+			when( !endOfInfo && !rexMatchp("^/.*$" line)
+				DILPrint( sprintf(nil "%s%s" info line) )
+			)
 		)
 	)
-	hiDisplayAppDBox(
-		?name 'About
-		?dboxText info
-		?buttonLayout 'Close
- 	)
 );let
 );procedure
 
@@ -145,12 +119,13 @@ let( (file line (info "") (endOfInfo nil))
 
 /*** Adding main menu to CIW ***/
 let( (items)
+	createDir( strcat(getWorkingDir() "/.il") )
 	ciwMenuInit()
 	items = list(
 			hiCreateMenuItem(
-				?name 'itemInit
-				?itemText "Initializtion"
-				?callback "DILInit()"
+				?name 'itemEditConfig
+				?itemText "Edit Config"
+				?callback "DILEditConfig()"
 			)
 			hiCreateMenuItem(
 				?name 'itemLoadConfig
@@ -163,7 +138,6 @@ let( (items)
 				?callback "DILAbout()"
 			)
 	)
-
 	menuDIL = hiCreatePulldownMenu(
 			'menuDIL
 			".il"
