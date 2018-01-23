@@ -21,22 +21,22 @@
 *******************************************************************/
 
 
-
+dilHome = strcat( skillHome "/dotil" )
 dilPrefix = "[.il]"
 dilFormGrid = 10
 dilTechFile = nil
 dilGrid = nil
-dilDiff = list()
-dilImps = list()
-dilPolys = list()
-dilWells = list()
-dilMetals = list()
+dilBEOL = list()
+dilFEOL = list()
+dilCuts = list()
 dilPins = list()
 dilVias = list()
-dilMetalWidthList = list()	;;; <----- list with metal name, minWidth=width of Mx to Mx+1 VIA and VIA + step to increse width, e.g. list( list(0.13 0.07+0.09) )
+dilMetalWidthList = list()
+dilLayersToToggle = list("")
 dilSmartViaFile = strcat( getWorkingDir() "/.il/vias.tmpl" )
+;dilConfigFile = strcat( getWorkingDir() "/.il/config" )
+dilConfigFile = strcat( dilHome "/config" ) ;; for developing
 dilAlphabet = list("A" "B" "C" "D" "E" "F" "G" "H" "I" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T")
-
 
 
 procedure( DILPrint(message @optional messageType)
@@ -59,14 +59,13 @@ let( (path dir dirs file files)
 
 procedure( DILEditConfig()
 let( ()
-	DILPrint("The code is not yet ready :)" "WIP")
+	edit( sprintf( nil "%s" dilConfigFile) )
 );let
 );procedure
 
 procedure( DILLoadConfig()
 let( (file line (info "") (toRead nil) block pin layer layers)
-	;file = infile( strcat(getWorkingDir() "/.il/config") )
-	file = infile(strcat(getShellEnvVar("HOME") "/cdns/config")) ;; for developing
+	file = infile(dilConfigFile)
 	when( file
 		while( gets(line file)
 			if( line != "\n" then line = car(parseString(line "\n")) else toRead = nil )
@@ -74,8 +73,10 @@ let( (file line (info "") (toRead nil) block pin layer layers)
 				case( block
 					("tech" when( ddGetObj(line) dilTechFile = techGetTechFile(ddGetObj(line))))
 					("grid" dilGrid = atof(line))
-					("metals" dilMetals = parseString(line))
-					("pins" foreach( pin parseString(line) dilPins = append1(dilPins parseString(pin "."))))
+					("feol" dilFEOL = parseString(line))
+					("beol" dilBEOL = parseString(line))
+					("cut" dilCuts = parseString(line))
+					("pin" foreach( pin parseString(line) dilPins = append1(dilPins parseString(pin "."))))
 				)
 			)
 			when( rexMatchp("^[[].*[]]$" line)
@@ -87,11 +88,7 @@ let( (file line (info "") (toRead nil) block pin layer layers)
 			DILPrint( strcat("Getting informaition from " dilTechFile~>libName " tech file") "INFO")
 			layers = techGetLayerFunctions(dilTechFile)
 			foreach( layer layers
-				if( cadr(layer) == "poly" then dilPolys = append1(dilPolys car(layer)) )
 				if( cadr(layer) == "cut" then dilVias = append1(dilVias car(layer)) )
-				if( cadr(layer) == "diff" then dilDiff = append1(dilDiff car(layer)) )
-				if( cadr(layer) == "nplus" || cadr(layer) == "pplus" then dilImps = append1(dilImps car(layer)) )
-				if( cadr(layer) == "nwell" then dilWells = append1(dilWells car(layer)) )
 			)
 			DILLoadSKILL()
 		else
@@ -108,7 +105,7 @@ let( (file line (info "") (endOfInfo nil))
 		while( gets(line file)
 			when( line == "\n" endOfInfo = t )
 			when( !endOfInfo && !rexMatchp("^/.*$" line)
-				DILPrint( sprintf(nil "%s%s" info line) )
+				DILPrint( sprintf(nil "%s" line) )
 			)
 		)
 	)

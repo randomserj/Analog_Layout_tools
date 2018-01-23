@@ -14,7 +14,7 @@ let( (obj field (fields nil) (i 0) (ns nil) m)
 		?prompt "Rows"
 		?value 0
 		?defValue 0
-		?range list(0 4)
+		?range list(0 8)
 		?wrapAround nil
 		?editable t
 		?obeyWidth t
@@ -26,7 +26,7 @@ let( (obj field (fields nil) (i 0) (ns nil) m)
 		?prompt "Columns"
 		?value 0
 		?defValue 0
-		?range list(0 4)
+		?range list(0 8)
 		?wrapAround nil
 		?editable t
 		?obeyWidth t

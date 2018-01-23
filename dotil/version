@@ -1,6 +1,12 @@
-v3.2.01
+v3.3.00
 
-	- removed "." from filenames of .il .cdsinit and .version
-	  to fix path for those files in the repo
-	- added toggling pins visibility
-	- fixed script name and names of procedures
+	- added back "." to filenames of .il and .cdsinit
+	- added "config" file to the .il home directory as a template
+	- all the front end layer are grouped in [feol] block in the config file
+	- all metal layers are grouped in [beol] block in the config file
+	- all pins are grouped in [pin] block in the config file
+	- all cut layers are grouped in [cut] block in the config file
+	- changed dotilToggleLayerVisibility.il script
+	- fixed DILAbout() procedure
+	- fixed DILEditConfig() procedure
+	- removed "wip" folder
