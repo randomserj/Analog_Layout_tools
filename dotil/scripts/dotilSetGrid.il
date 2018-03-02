@@ -19,4 +19,4 @@ let( (window mfg curGridX curGridY )
 );let
 );procedure
 
-hiSetBindKey( "Layout" "<Key>F5" "DILSwitchGrid()" )
+hiSetBindKey( "Layout" "<Key>Tab" "DILSwitchGrid()" )

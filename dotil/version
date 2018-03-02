@@ -1,12 +1,7 @@
-v3.3.00
+v3.3.01
 
-	- added back "." to filenames of .il and .cdsinit
-	- added "config" file to the .il home directory as a template
-	- all the front end layer are grouped in [feol] block in the config file
-	- all metal layers are grouped in [beol] block in the config file
-	- all pins are grouped in [pin] block in the config file
-	- all cut layers are grouped in [cut] block in the config file
-	- changed dotilToggleLayerVisibility.il script
-	- fixed DILAbout() procedure
-	- fixed DILEditConfig() procedure
-	- removed "wip" folder
+	- changed bindkey for switching grid to <Key>Tab
+	- fixed DILAbout procedure
+	- new features in dotilToggleLayersVisibility() procedure
+	- added DILCleanUp() procedure to purge all variables and procedures
+	- added [dummy] field in config file for future features

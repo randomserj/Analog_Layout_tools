@@ -36,7 +36,7 @@ let( (obj field (fields nil) (i 0) (ns nil) m)
 	size = list(350 350)
 	hiCreateAppForm(
 		?name 'dilSmartArrayForm
-		?formTitle "Smart Array"
+		?formTitle "Random Form"
 		?buttonLayout 'OKCancel
 		?initialSize size
 		?minSize size

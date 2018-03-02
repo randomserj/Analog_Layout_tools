@@ -1,3 +1,15 @@
+procedure( DILSmartArrayCBGetGroupBoundary(group)
+let( (fig figs boundary)
+	figs = group~>figs
+	foreach(fig figs
+		when( fig~>objType == "rect" && fig~>layerName == "text"
+			boundary = fig
+		)
+	)
+	boundary
+);let
+);procedure
+
 procedure( DILSmartArrayCBChange(row column)
 let( (formName text o (index 0))
 	formName = symbolToString( hiGetCurrentForm()~>hiFormSym )
@@ -59,16 +71,12 @@ let( (string name names objs isFound (x 100) (y -100) dx dy bnd)
 					x = -1 * car(obj~>origin) + dx
 					y = -1 * cadr(obj~>origin) + dy
 					dbMoveFig( obj obj~>cellView list(list(x y) "R0" 1) )
-					bnd = MISCGroupGetBoundary(obj)
-					dx = dx + car( MISCCalcGetDimensions(bnd~>bBox) )
-					unless( obj~>dilLabel
-						obj~>dilLabel = name
-						MISCGroupAttachLabel(obj)
-					)
+					bnd = DILSmartArrayCBGetGroupBoundary(obj)
+					dx = dx + abs(caar(bnd~>bBox) - caadr(bnd~>bBox))
 				)
 			)
 		)
-		dy = dy + cadr( MISCCalcGetDimensions(bnd~>bBox) )
+		dy = dy + abs(cadar(bnd~>bBox) - cadadr(bnd~>bBox))
 	)
 );let
 );procedure
