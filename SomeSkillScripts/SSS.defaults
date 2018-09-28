@@ -1,0 +1,68 @@
+/*******************************************************************
+/*
+/*					Some SKILL Scripts defaults
+/*
+/*******************************************************************/
+
+sssPrefix = "[SSS]"
+sssFormGrid = 10
+sssTechFile = nil
+sssGrid = nil
+sssBEOL = list()
+sssFEOL = list()
+sssCuts = list()
+sssPins = list()
+sssVias = list()
+sssDummies = list()
+sssLayersToToggle = list("")
+sssSmartViaFile = strcat( getWorkingDir() "/.SSS/vias.tmpl" )
+;dilConfigFile = strcat( getWorkingDir() "/.il/config" )
+sssConfigFile = strcat( sssHome "/config" ) ;; for developing
+sssAlphabet = list("A" "B" "C" "D" "E" "F" "G" "H" "I" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T")
+
+
+procedure( SSSPrint(message @optional messageType)
+let( ()
+	printf("%s\t*** %s ***\t\t%s\n" sssPrefix messageType message)
+);let
+);procedure
+
+procedure( SSSCleanUp()
+let( (var func)
+	foreach( var listVariables("^sss") if( var != "sssHome" var = 'unbound ) )
+	foreach( func listFunctions("^SSS" t) putd(func nil) )
+	foreach( func listFunctions("^DIL" t) putd(func nil) )
+	foreach( func listFunctions("^MISC" t) putd(func nil) )
+);let
+);procedure
+
+procedure( SSSLoadSKILL(@optional inclWIP)
+let( (path dir dirs file files )
+	dirs = list( "scripts" "forms" "callbacks" )
+	when( inclWIP then rex = "^.*$" dirs = append1(dirs "wip") )
+	foreach( dir dirs
+		path = strcat( sssHome "/" dir)
+		SSSPrint( strcat("Loading " dir) "INFO"  )
+		files = cddr( sort( getDirFiles(path) nil ) )
+		foreach( file files
+			when( rexMatchp("^sss.*" file) loadi(strcat(path "/" file)) )
+		)
+	)
+);let
+);procedure
+
+procedure( SSSLoadWIP()
+let( (path file files)
+	path = strcat( sssHome "/wip" )
+	SSSPrint( strcat("Loading wip") "INFO"  )
+	files = cddr( sort( getDirFiles(path) nil ) )
+	foreach( file files loadi(strcat(path "/" file)) )
+	t
+);let
+);procedure
+
+procedure( SSSRemoveFromCIW()
+let( ()
+	hiDeleteBannerMenu( hiGetCIWindow() hiGetNumMenus(hiGetCIWindow())-1 )
+);let
+);procedure

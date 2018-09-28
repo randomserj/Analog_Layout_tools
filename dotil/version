@@ -1,7 +1,0 @@
-v3.3.01
-
-	- changed bindkey for switching grid to <Key>Tab
-	- fixed DILAbout procedure
-	- new features in dotilToggleLayersVisibility() procedure
-	- added DILCleanUp() procedure to purge all variables and procedures
-	- added [dummy] field in config file for future features

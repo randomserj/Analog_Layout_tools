@@ -1,0 +1,20 @@
+[tech]
+tsmc013
+
+[grid]
+0.15
+
+[feol]
+NWELL NT_N OD OD2 OD3 POLYG NIMP PIMP
+
+[beol]
+METAL1 METAL2 METAL3 METAL4 METAL5 METAL6 AP CU_PPI UBM
+
+[cut]
+CONT VIA12 VIA23 VIA34 VIA45 VIA56 RV
+
+[pin]
+METAL1.pin METAL2.pin METAL3.pin METAL4.pin METAL5.pin METAL6.pin AP.pin CU_PPI.pin UBM.pin
+
+[dummy]
+OD.dummy POLYG.dummy METAL1.dummy METAL2.dummy METAL3.dummy METAL4.dummy METAL5.dummy METAL6.dummy

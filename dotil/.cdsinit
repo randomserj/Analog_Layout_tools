@@ -1,2 +1,0 @@
-dilHome = strcat( skillHome "/dotil" )
-load( strcat( dilHome "/.il" ) )

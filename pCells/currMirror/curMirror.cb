@@ -1,0 +1,13 @@
+procedure( cb_wMOS( param )
+	if( isLarge( param ) then
+		printf( "\n[WARNING] Width %L is too large. It has been set to default value.\nq" param )
+		cdfgData->wMOS->value = cdfgData->wMOS->defValue
+	)
+)
+
+procedure( cb_lMOS( param )
+	if( isLarge( param ) then
+		printf( "\n[WARNING] Length %L is too large. It has been set to default value.\nq" param )
+		cdfgData->lMOS->value = cdfgData->lMOS->defValue
+	)
+)
