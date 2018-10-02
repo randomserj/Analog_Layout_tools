@@ -4,7 +4,8 @@
 /*
 /*	Bindkeys:
 /*
-/*	- <Key>F4 to build an array from either devices or groups
+/*	- <Key>F4 to define matching patterns in the sch
+/*     and build them in the layout
 /*	- <Key>; to load/save via templates and to add/remove stacks
 /*	- <Key>Tab to change grid
 /*	- <Key>1..9 to toggle metals+vias visiability
@@ -12,17 +13,23 @@
 /*	- <Key>0 to toggle FEOL/BEOL layers
 /*	- ctrl<Key>0 to add/remove FEOL layers to/from visiability list
 /*	- <Key>` to show all layers
-/*	- <Key>\ to mark a net in the hierarchy
-/*	- shift<Key>\ to remove all marked nets
 /*
 /*******************************************************************/
 
 procedure( _SSSLoadConfig()
-let( (file line (info "") (toRead nil) block pin layer layers dilVar)
-	file = infile(sssConfigFile)
+let( (path file line (info "") (toRead nil) block pin layer layers dilVar)
+	when( infile(strcat(getShellEnvVar("HOME") "/SSS.config"))
+		file = infile(strcat(getShellEnvVar("HOME") "/SSS.config"))
+		path = strcat(getShellEnvVar("HOME") "/SSS.config")
+	)
+	when( infile(strcat(getWorkingDir() "/SSS.config"))
+		file = infile(strcat(getWorkingDir() "/SSS.config"))
+		path = strcat(getWorkingDir() "/SSS.config")
+	)
 	SSSCleanUp()
 	load( strcat(sssHome "/SSS.defaults") )
 	when( file
+		SSSPrint(strcat("Reading config from " path) "INFO")
 		while( gets(line file)
 			if( line != "\n" then line = car(parseString(line "\n")) else toRead = nil )
 			when( toRead

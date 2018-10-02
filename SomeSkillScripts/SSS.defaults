@@ -16,8 +16,6 @@ sssVias = list()
 sssDummies = list()
 sssLayersToToggle = list("")
 sssSmartViaFile = strcat( getWorkingDir() "/.SSS/vias.tmpl" )
-;dilConfigFile = strcat( getWorkingDir() "/.il/config" )
-sssConfigFile = strcat( sssHome "/config" ) ;; for developing
 sssAlphabet = list("A" "B" "C" "D" "E" "F" "G" "H" "I" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T")
 
 
@@ -31,8 +29,8 @@ procedure( SSSCleanUp()
 let( (var func)
 	foreach( var listVariables("^sss") if( var != "sssHome" var = 'unbound ) )
 	foreach( func listFunctions("^SSS" t) putd(func nil) )
-	foreach( func listFunctions("^DIL" t) putd(func nil) )
-	foreach( func listFunctions("^MISC" t) putd(func nil) )
+	;foreach( func listFunctions("^DIL" t) putd(func nil) )
+	;foreach( func listFunctions("^MISC" t) putd(func nil) )
 );let
 );procedure
 

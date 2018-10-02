@@ -1,23 +1,20 @@
-procedure( SSSLayOutMatchingForm(_objs)
+procedure( SSSLayOutMatchingForm(mDef)
 let(
 	(
-		form size obj objs props fields i j text
+		form size fields i j text
 		pattern names rows cols
 		fieldL
 	)
-	objs = _objs
 	fields = list()
-	obj = car(objs)
-	props = obj~>matching
+	props = mDef~>matching
 	names = car(props)
 	pattern = car(reverse(props))
 	rows = length(car(pattern))
 	cols = length(pattern)
-
 	field = hiCreateButton(
 			?name 'bLayout
 			?buttonText "Press here to lay out pattern"
-			?callback "SSSLayOutMatchingCBLayout(objs)"
+			?callback sprintf( nil "SSSLayOutMatchingCBLayout(mDef)" )
 	)
 	fields = list( list(field 30:30 210:30) )
 	for(j 1 rows

@@ -1,5 +1,3 @@
-v4.0.0
+v4.0.1
 
-	- changed the folders structure and the name of the root folder
-	- changed the prefixes for procedures and variables
-	- added folder for work in progress scripts
+	- reading a config file either form the home or working folder

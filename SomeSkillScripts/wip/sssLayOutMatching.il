@@ -1,13 +1,14 @@
 procedure( SSSLayOutMatching()
-let( ( obj objs )
-	objs = setof( obj geGetSelSet() obj~>objType == "inst" )
+let( ( obj objs mDef)
+	objs = setof( obj geGetSelSet() obj~>cellName == "matchingDef" )
 	if( objs then
+		mDef = car(objs)
 		unless( boundp('sssLayOutMatchingForm) && hiIsFormDisplayed(sssLayOutMatchingForm)
-			SSSLayOutMatchingForm(objs)
+			SSSLayOutMatchingForm(mDef)
 		)
 		hiDisplayForm(sssLayOutMatchingForm)
 	else
-		println("no objects selected\n")
+		println("no objects selected")
 	)
 );let
 );procedure

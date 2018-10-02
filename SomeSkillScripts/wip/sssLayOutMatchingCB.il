@@ -1,14 +1,25 @@
-procedure( SSSLayOutMatchingCBLayout(_objs)
-let( (props pattern row string name names objs isFound (x 100) (y -100) dx dy bnd)
-	objs = _objs
-	props = car(objs)~>matching
-	dprint(props)
+procedure( SSSLayOutMatchingCBLayout(mDef)
+let( (props name names pattern temp_names letter row inst insts isFound x y dx dy bnd)
+	props = mDef~>matching
 	pattern = reverse(car(reverse(props)))
-	string = ""
-	dy = 0
+	names = makeTable( "names" )
+	foreach( name cadr(props)
+		names[cadr(name)] = car(name)
+	)
+	temp_names = list()
 	foreach( row pattern
 		dprint(row)
-		string = strcat( string buildString(row "") )
+		foreach( letter row
+			isFound = nil
+			foreach( inst mDef~>cellView~>instances
+				when( rexMatchp(sprintf(nil "^%s" names[letter]) inst~>name) && !isFound
+					inst~>oldName = inst~>name
+					inst~>name = strcat("mDef" inst~>name)
+					temp_names = append1(temp_names inst~>name)
+					isFound = t
+				)
+			)
+		)
 		/*
 		names = parseString(string "-")
 		dx = 0
@@ -28,8 +39,17 @@ let( (props pattern row string name names objs isFound (x 100) (y -100) dx dy bn
 		)
 		dy = dy + abs(cadar(bnd~>bBox) - cadadr(bnd~>bBox))
 		*/
-		string = strcat(string "/")
 	)
-	dprint(string)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;; temporary solution to revert the names
+	dprint(temp_names)
+	foreach(name temp_names
+		foreach(inst mDef~>cellView~>instances
+			when( inst~>name == name inst~>name = car(parseString(name "mDef")))
+		)
+	)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 );let
 );procedure
