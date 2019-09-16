@@ -1,3 +1,8 @@
-v4.0.1
+v4.1.0
 
-	- reading a config file either form the home or working folder
+	- adding ",", "." bindkeys to change layers up/down
+	- fixed issues with loading and editing config file
+	- adding shift + 0..9 to toggle dummy metals visibility
+	- added beta version SSSDefineMatching to define matching in the Schematic
+	- added beta version SSSLayoutMatching to modify matching in the Layout
+	- added beta SSSNetShielding to shield selected net

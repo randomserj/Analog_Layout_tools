@@ -5,7 +5,6 @@
 /*******************************************************************/
 
 sssPrefix = "[SSS]"
-sssFormGrid = 10
 sssTechFile = nil
 sssGrid = nil
 sssBEOL = list()
@@ -16,7 +15,6 @@ sssVias = list()
 sssDummies = list()
 sssLayersToToggle = list("")
 sssSmartViaFile = strcat( getWorkingDir() "/.SSS/vias.tmpl" )
-sssAlphabet = list("A" "B" "C" "D" "E" "F" "G" "H" "I" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T")
 
 
 procedure( SSSPrint(message @optional messageType)
@@ -29,15 +27,12 @@ procedure( SSSCleanUp()
 let( (var func)
 	foreach( var listVariables("^sss") if( var != "sssHome" var = 'unbound ) )
 	foreach( func listFunctions("^SSS" t) putd(func nil) )
-	;foreach( func listFunctions("^DIL" t) putd(func nil) )
-	;foreach( func listFunctions("^MISC" t) putd(func nil) )
 );let
 );procedure
 
-procedure( SSSLoadSKILL(@optional inclWIP)
+procedure( SSSLoadSKILL()
 let( (path dir dirs file files )
 	dirs = list( "scripts" "forms" "callbacks" )
-	when( inclWIP then rex = "^.*$" dirs = append1(dirs "wip") )
 	foreach( dir dirs
 		path = strcat( sssHome "/" dir)
 		SSSPrint( strcat("Loading " dir) "INFO"  )

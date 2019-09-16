@@ -1,4 +1,4 @@
-procedure( SSSLayOutMatchingForm(mDef)
+procedure( SSSNetShieldingForm(mDef)
 let(
 	(
 		form size fields i j text
@@ -9,8 +9,8 @@ let(
 	props = mDef~>matching
 	names = car(props)
 	pattern = car(reverse(props))
-	rows = length(car(pattern))
-	cols = length(pattern)
+	cols = length(car(pattern))
+	rows = length(pattern)
 	field = hiCreateButton(
 			?name 'bLayout
 			?buttonText "Press here to lay out pattern"

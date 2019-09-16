@@ -1,13 +1,13 @@
 procedure( SSSDefineMatching()
-let( ( obj objs )
-	objs = setof( obj geGetSelSet() obj~>objType == "inst" && obj~>cellName != "matchingDef" )
-	if( objs then
+let( ( inst insts )
+	insts = setof( inst geGetSelSet() inst~>objType == "inst" )
+	if( insts then
 		unless( boundp('sssDefineMatchingForm) && hiIsFormDisplayed(sssDefineMatchingForm)
-			SSSDefineMatchingForm(objs)
+			SSSDefineMatchingForm(insts)
 		)
 		hiDisplayForm(sssDefineMatchingForm)
 	else
-		println("no objects selected")
+		println("no instances selected")
 	)
 );let
 );procedure

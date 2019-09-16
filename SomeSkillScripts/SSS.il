@@ -4,33 +4,34 @@
 /*
 /*	Bindkeys:
 /*
-/*	- <Key>F4 to define matching patterns in the sch
-/*     and build them in the layout
-/*	- <Key>; to load/save via templates and to add/remove stacks
+/*	- <Key>F4 to define matching pattern in the sch
+/*     and build/modify it in the layout
 /*	- <Key>Tab to change grid
 /*	- <Key>1..9 to toggle metals+vias visiability
-/*	- ctrl<Key>1..9 to add/remove metal+via to/from visiability list
+/*	- ctrl<Key>1..9 to add/remove metal+via to/from visibility list
+/*	- shift<Key>1..9 to add/remove dummy metal to/from visibility list
 /*	- <Key>0 to toggle FEOL/BEOL layers
-/*	- ctrl<Key>0 to add/remove FEOL layers to/from visiability list
+/*	- ctrl<Key>0 to add/remove FEOL layers to/from visibility list
+/*	- shift<Key>0 to add/remove dummy metals layers to/from visibility list
 /*	- <Key>` to show all layers
+/*  - <key>,. to change layer down/up of selected objects
 /*
 /*******************************************************************/
 
 procedure( _SSSLoadConfig()
-let( (path file line (info "") (toRead nil) block pin layer layers dilVar)
+let( (cfg_path cfg_file line (info "") (toRead nil) block pin layer layers i )
 	when( infile(strcat(getShellEnvVar("HOME") "/SSS.config"))
-		file = infile(strcat(getShellEnvVar("HOME") "/SSS.config"))
-		path = strcat(getShellEnvVar("HOME") "/SSS.config")
+		cfg_path = strcat(getShellEnvVar("HOME") "/SSS.config")
 	)
 	when( infile(strcat(getWorkingDir() "/SSS.config"))
-		file = infile(strcat(getWorkingDir() "/SSS.config"))
-		path = strcat(getWorkingDir() "/SSS.config")
+		cfg_path = strcat(getWorkingDir() "/SSS.config")
 	)
+	cfg_file = infile(cfg_path)
 	SSSCleanUp()
 	load( strcat(sssHome "/SSS.defaults") )
-	when( file
-		SSSPrint(strcat("Reading config from " path) "INFO")
-		while( gets(line file)
+	when( cfg_file
+		SSSPrint(strcat("Reading config from " cfg_path) "INFO")
+		while( gets(line cfg_file)
 			if( line != "\n" then line = car(parseString(line "\n")) else toRead = nil )
 			when( toRead
 				case( block
@@ -63,8 +64,17 @@ let( (path file line (info "") (toRead nil) block pin layer layers dilVar)
 );procedure
 
 procedure( _SSSEditConfig()
-let( ()
-	edit( sprintf( nil "%s" sssConfigFile) )
+let( (cfg_path)
+	when( infile(strcat(getShellEnvVar("HOME") "/SSS.config"))
+		cfg_path = strcat(getShellEnvVar("HOME") "/SSS.config")
+	)
+	when( infile(strcat(getWorkingDir() "/SSS.config"))
+		cfg_path = strcat(getWorkingDir() "/SSS.config")
+	)
+	when( cfg_path
+		SSSPrint(strcat("Editing " cfg_path " file") "INFO")
+		edit( sprintf(nil "%s" cfg_path) )
+	)
 );let
 );procedure
 
