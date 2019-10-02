@@ -17,25 +17,35 @@ sssLayersToToggle = list("")
 sssSmartViaFile = strcat( getWorkingDir() "/.SSS/vias.tmpl" )
 
 
-procedure( SSSPrint(message @optional messageType)
-let( ()
-	printf("%s\t*** %s ***\t\t%s\n" sssPrefix messageType message)
+procedure( SSSPrint(message @optional type)
+let( ((messageType ""))
+	when( type == "i" messageType = "INFO" )
+	when( type == "w" messageType = "WARNING" )
+	when( type == "e" messageType = "ERROR" )
+	printf("%s\t*** %s ***\t\t\t%s\n" sssPrefix messageType message)
 );let
 );procedure
 
-procedure( SSSCleanUp()
+procedure( SSSRemoveFromCIW()
+let( ()
+	hiDeleteBannerMenu( hiGetCIWindow() hiGetNumMenus(hiGetCIWindow())-1 )
+);let
+);procedure
+
+procedure( SSSCleanUp(@optional rem)
 let( (var func)
+	when( rem SSSRemoveFromCIW() )
 	foreach( var listVariables("^sss") if( var != "sssHome" var = 'unbound ) )
 	foreach( func listFunctions("^SSS" t) putd(func nil) )
 );let
 );procedure
 
-procedure( SSSLoadSKILL()
+procedure( SSSLoadScripts()
 let( (path dir dirs file files )
 	dirs = list( "scripts" "forms" "callbacks" )
 	foreach( dir dirs
 		path = strcat( sssHome "/" dir)
-		SSSPrint( strcat("Loading " dir) "INFO"  )
+		SSSPrint( strcat("Loading " dir) "i"  )
 		files = cddr( sort( getDirFiles(path) nil ) )
 		foreach( file files
 			when( rexMatchp("^sss.*" file) loadi(strcat(path "/" file)) )
@@ -47,15 +57,9 @@ let( (path dir dirs file files )
 procedure( SSSLoadWIP()
 let( (path file files)
 	path = strcat( sssHome "/wip" )
-	SSSPrint( strcat("Loading wip") "INFO"  )
+	SSSPrint( strcat("Loading wip") "i"  )
 	files = cddr( sort( getDirFiles(path) nil ) )
 	foreach( file files loadi(strcat(path "/" file)) )
 	t
-);let
-);procedure
-
-procedure( SSSRemoveFromCIW()
-let( ()
-	hiDeleteBannerMenu( hiGetCIWindow() hiGetNumMenus(hiGetCIWindow())-1 )
 );let
 );procedure

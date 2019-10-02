@@ -30,7 +30,7 @@ let( (cfg_path cfg_file line (info "") (toRead nil) block pin layer layers i )
 	SSSCleanUp()
 	load( strcat(sssHome "/SSS.defaults") )
 	when( cfg_file
-		SSSPrint(strcat("Reading config from " cfg_path) "INFO")
+		SSSPrint(strcat("Reading config from " cfg_path) "i")
 		while( gets(line cfg_file)
 			if( line != "\n" then line = car(parseString(line "\n")) else toRead = nil )
 			when( toRead
@@ -50,14 +50,14 @@ let( (cfg_path cfg_file line (info "") (toRead nil) block pin layer layers i )
 			)
 		)
 		if( sssTechFile then
-			SSSPrint( strcat("Getting informaition from " sssTechFile~>libName " tech file") "INFO")
+			SSSPrint( strcat("Getting informaition from " sssTechFile~>libName " tech file") "i")
 			layers = techGetLayerFunctions(sssTechFile)
 			foreach( layer layers
 				if( cadr(layer) == "cut" then sssVias = append1(sssVias car(layer)) )
 			)
-			SSSLoadSKILL()
+			SSSLoadScripts()
 		else
-			SSSPrint( "Tech library is missed" "ERROR" )
+			SSSPrint( "Tech library is missed" "e" )
 		)
 	)
 );let
@@ -72,7 +72,7 @@ let( (cfg_path)
 		cfg_path = strcat(getWorkingDir() "/SSS.config")
 	)
 	when( cfg_path
-		SSSPrint(strcat("Editing " cfg_path " file") "INFO")
+		SSSPrint(strcat("Editing " cfg_path " file") "i")
 		edit( sprintf(nil "%s" cfg_path) )
 	)
 );let
@@ -85,7 +85,7 @@ let( (file line (info "") (endOfInfo nil))
 		while( gets(line file) && !endOfInfo
 			if( line == "\n" then endOfInfo = t else line = car(parseString(line "\n")) )
 			when( rexMatchp("^/.*$" line)
-				SSSPrint( line "INFO" )
+				SSSPrint( line "i" )
 			)
 		)
 	)
@@ -120,6 +120,6 @@ let( (items)
 			items
 	)
 	if( hiInsertBannerMenu( window(1) sssMenu hiGetNumMenus(window(1)) )
-		SSSPrint( "Some SKILL Scripts menu has been added to CIW" "INFO" )
+		SSSPrint( "Some SKILL Scripts menu has been added to CIW" "i" )
 	)
 );let
