@@ -1,21 +1,32 @@
-procedure( SSSDefineMatchingCBBuild(insts props)
-let( (form pattern (letter " ") field (fields nil) prevR prevC curR curC)
+procedure( SSSDefineMatchingCBSelect(number m)
+let( (form i field string name inst state )
 	form = sssDefineMatchingForm
-	foreach( field form~>fieldList
-        when( rexMatchp("^bArrayItem.*$" symbolToString(field)) hiDeleteField(form field) )
-    )
-	when( length(insts) == 1 dprint(insts) )
+	state = evalstring(sprintf(nil "%s~>bbItem%d~>value" form number))
+	if( state then
+		evalstring( sprintf(nil "%s~>cycItem%d~>enabled = t" form number) )
+		for( i 0 m-1 when(i != number evalstring(sprintf(nil "%s~>bbItem%d~>value = nil" form i))) )
+	else
+		evalstring(sprintf(nil "%s~>cycItem%d~>enabled = nil" form number))
+	)
+);let
+);procedure
+
+procedure( SSSDefineMatchingCBBuild(insts props)
+let( (form pattern name (letter " ") field (fields nil) prevR prevC curR curC)
+	form = sssDefineMatchingForm
+	foreach( field form~>fieldList when(rexMatchp("^bArrayItem.*$" symbolToString(field)) hiDeleteField(form field)) )
+	when( length(insts) == 1 letter = evalstring(sprintf(nil "%s~>cycItem0~>value" form)) )
 	when( props pattern = car(props) )
 	for(j 1 form~>sbRows~>value
 		for( i 1 form~>sbColumns~>value
 			when( pattern letter = nth(i-1 nth(j-1 pattern)) )
-			unless( letter letter = " " ) ;; *************** temporary solution
+			unless( letter letter = " " )
 			field = hiCreateButton(
 				?name stringToSymbol( sprintf(nil "bArrayItem%d%d" i j) )
 				?buttonText letter
 				?callback sprintf(nil "SSSDefineMatchingCBChange(%d %d)" i j)
 			)
-			fields = append1( fields list(field 30*i:150+30*length(insts)+30*j 30:30) )
+			fields = append1( fields list(field 30*i:180+30*length(insts)+30*j 30:30) )
 		)
 	)
 	when( fields hiAddFields(form fields) )
@@ -23,21 +34,19 @@ let( (form pattern (letter " ") field (fields nil) prevR prevC curR curC)
 );procedure
 
 procedure( SSSDefineMatchingCBChange(row column)
-let( (form current letter lettersfield o (index 0))
+let( (form i choices current field (states list()))
     form = sssDefineMatchingForm
-	current = evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form row column) )
-    letters = list(" ")
-    foreach( field form~>fieldList
-        when( rexMatchp("^cycItem.*$" symbolToString(field))
-            letters = append1( letters evalstring(sprintf(nil "%s~>%s~>value" form field)) )
-        )
-    )
-	foreach( letter letters
-		if( letter == current then
-			when( index >= length(letters)-1 index = -1 )
-			evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText=\"%s\"" form row column nth(index+1 letters)) )
+	foreach( field form~>fieldList
+		when( rexMatchp("^cycItem.*$" symbolToString(field))
+			states = append1( states evalstring(sprintf(nil "%s~>%s~>enabled" form field)) )
 		)
-		index++
+	)
+	when( lindex( states t )
+		i = lindex( states t ) - 1
+	    choices = list( " " evalstring(sprintf(nil "%s~>cycItem%d~>value" form i)) )
+		current = evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form row column) )
+		when( current == " " choices = reverse(choices) )
+		evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText = \"%s\"" form row column car(choices)) )
 	)
 );let
 );procedure
@@ -133,18 +142,22 @@ props = list(
         )
 *****************/
 procedure( SSSDefineMatchingCB(insts)
-let( (cv cellName win wins form inst (props list()) name string pattern shift i j (isEdit nil) (isFound nil))
+let(
+	(
+		cv cellName win wins form
+		(props list()) name letter string pattern shift
+		i j (isEdit nil) (isFound nil)
+	)
     form = sssDefineMatchingForm
 	when( type( car(insts) ) == 'list isEdit = t )
     for( i 0 length(insts)-1
-        if( isEdit then name = car(nth(i insts)) else name = car(parseString(nth(i insts~>name) "<>")) )
-        props = append1( props list(name evalstring(sprintf(nil "%s~>cycItem%s~>value" form name))) )
+		name = evalstring(sprintf(nil "%s~>bbItem%d~>_buttonText" form i))
+		letter = evalstring(sprintf(nil "%s~>cycItem%d~>value" form i))
+        props = append1( props list(name letter) )
     )
 	for( j 1 form~>sbRows~>value
 		string = list()
-		for( i 1 form~>sbColumns~>value
-			string = append1( string evalstring(sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form i j)) )
-		)
+		for( i 1 form~>sbColumns~>value string = append1(string evalstring(sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form i j))) )
 		pattern = append1(pattern string)
 	)
     shift = list( form~>ffXSpacing~>value form~>ffYSpacing~>value )
@@ -155,7 +168,10 @@ let( (cv cellName win wins form inst (props list()) name string pattern shift i 
 	    wins = cdr(wins) ;; to remove CIW from the list
 	    foreach( win wins
 	        cv = geGetWindowCellView(win)
-	        when( cv~>cellName == cellName && cv~>viewName == "layout" hiSetCurrentWindow(win) isFound = t )
+	        when( cv~>cellName == cellName && cv~>viewName == "layout"
+				hiSetCurrentWindow(win)
+				isFound = t
+			)
 	    )
 	)
     when( isFound || isEdit
