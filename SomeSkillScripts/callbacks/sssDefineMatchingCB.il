@@ -1,20 +1,54 @@
-procedure( SSSDefineMatchingCBSelect(number m)
-let( (form i field string name inst state )
+procedure( SSSDefineMatchingCBSelectLetter(number count)
+let( (form i field string name inst current)
 	form = sssDefineMatchingForm
-	state = evalstring(sprintf(nil "%s~>bbItem%d~>value" form number))
-	if( state then
+	current = evalstring( sprintf(nil "%s~>bbItem%d~>value" form number) )
+	if( current then
+		for( i 0 count-1 when(i != number evalstring(sprintf(nil "%s~>bbItem%d~>value = nil" form i))) )
 		evalstring( sprintf(nil "%s~>cycItem%d~>enabled = t" form number) )
-		for( i 0 m-1 when(i != number evalstring(sprintf(nil "%s~>bbItem%d~>value = nil" form i))) )
+		evalstring( sprintf(nil "%s~>l_DEBUG_SelectedInst~>value = \"%d\"" form number) )
 	else
-		evalstring(sprintf(nil "%s~>cycItem%d~>enabled = nil" form number))
+		evalstring( sprintf(nil "%s~>cycItem%d~>enabled = nil" form number) )
+		evalstring( sprintf(nil "%s~>l_DEBUG_SelectedInst~>value = \"-1\"" form) )
 	)
 );let
 );procedure
 
-procedure( SSSDefineMatchingCBBuild(insts props)
-let( (form pattern name (letter " ") field (fields nil) prevR prevC curR curC)
+procedure( SSSDefineMatchingCBChangeLetter()
+let( (form number count current previous letter (letters list()) (toChange t))
 	form = sssDefineMatchingForm
-	foreach( field form~>fieldList when(rexMatchp("^bArrayItem.*$" symbolToString(field)) hiDeleteField(form field)) )
+	number = atoi( evalstring(sprintf(nil "%s~>l_DEBUG_SelectedInst~>value" form)) )
+	count = atoi( evalstring(sprintf(nil "%s~>l_DEBUG_NumberOfInst~>value" form)) )
+	current = evalstring( sprintf(nil "%s~>cycItem%d~>value" form number) )
+	previous = evalstring( sprintf(nil "%s~>cycItem%d~>lastValue" form number) )
+	for( i 0 count-1
+		letter = evalstring(sprintf(nil "%s~>cycItem%d~>value" form i))
+		letters = append1( letters letter )
+		when( letter == current && i != number toChange = nil )
+	)
+	when( toChange
+		for( j 1 form~>sbRows~>value
+			for( i 1 form~>sbColumns~>value
+				letter = evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form j i))
+				when( letter != " " && !member(letter letters)
+					evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText = \"%s\"" form j i current))
+				)
+			)
+		)
+	)
+	unless( toChange evalstring(sprintf(nil "%s~>cycItem%d~>value=\"%s\"" form number previous)) )
+);let
+);procedure
+
+procedure( SSSDefineMatchingCBBuild(insts props)
+let( (form pattern name total (letter " ") field (fields nil))
+	form = sssDefineMatchingForm
+	when( !props
+		foreach( field form~>fieldList when(rexMatchp("^bArrayItem.*$" symbolToString(field)) hiDeleteField(form field)) )
+		for( i 0 length(insts)-1
+			total = evalstring( sprintf(nil "%s~>lNum%d~>value" form i) )
+			evalstring( sprintf(nil "%s~>lNumLeft%d~>value = \"%s\"" form i total) )
+		)
+	)
 	when( length(insts) == 1 letter = evalstring(sprintf(nil "%s~>cycItem0~>value" form)) )
 	when( props pattern = car(props) )
 	for(j 1 form~>sbRows~>value
@@ -22,9 +56,9 @@ let( (form pattern name (letter " ") field (fields nil) prevR prevC curR curC)
 			when( pattern letter = nth(i-1 nth(j-1 pattern)) )
 			unless( letter letter = " " )
 			field = hiCreateButton(
-				?name stringToSymbol( sprintf(nil "bArrayItem%d%d" i j) )
+				?name stringToSymbol( sprintf(nil "bArrayItem%d%d" j i) )
 				?buttonText letter
-				?callback sprintf(nil "SSSDefineMatchingCBChange(%d %d)" i j)
+				?callback sprintf(nil "SSSDefineMatchingCBChangePattern(%d %d)" j i)
 			)
 			fields = append1( fields list(field 30*i:180+30*length(insts)+30*j 30:30) )
 		)
@@ -33,20 +67,55 @@ let( (form pattern name (letter " ") field (fields nil) prevR prevC curR curC)
 );let
 );procedure
 
-procedure( SSSDefineMatchingCBChange(row column)
-let( (form i choices current field (states list()))
+procedure( SSSDefineMatchingCBChangePattern(row column)
+let( (form i j choices current field left leftNew value (values list()) (states list()) (toChange nil))
     form = sssDefineMatchingForm
 	foreach( field form~>fieldList
 		when( rexMatchp("^cycItem.*$" symbolToString(field))
 			states = append1( states evalstring(sprintf(nil "%s~>%s~>enabled" form field)) )
+			values = append1( values evalstring(sprintf(nil "%s~>%s~>value" form field)) )
 		)
 	)
 	when( lindex( states t )
 		i = lindex( states t ) - 1
-	    choices = list( " " evalstring(sprintf(nil "%s~>cycItem%d~>value" form i)) )
+	    choices = list( evalstring(sprintf(nil "%s~>cycItem%d~>value" form i)) " " )
 		current = evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form row column) )
-		when( current == " " choices = reverse(choices) )
-		evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText = \"%s\"" form row column car(choices)) )
+		left = atoi( evalstring(sprintf(nil "%s~>lNumLeft%d~>value" form i)) )
+		;when( left == 0 toChange = nil )
+		when( current != car(choices) && left > 0
+			toChange = t
+			left--
+			when( current != " "
+				j = lindex( values current ) - 1
+				leftNew = atoi( evalstring(sprintf(nil "%s~>lNumLeft%d~>value" form j)) ) + 1
+				evalstring( sprintf(nil "%s~>lNumLeft%d~>value = \"%d\"" form j leftNew) )
+			)
+		)
+		when( current == car(choices)
+			toChange = t
+			left++
+			choices = reverse(choices)
+		)
+		when( toChange
+			evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText = \"%s\"" form row column car(choices)) )
+			evalstring( sprintf(nil "%s~>lNumLeft%d~>value = \"%d\"" form i left) )
+		)
+	)
+);let
+);procedure
+
+procedure( SSSDefineMatchingCBFillEmpty()
+let( (form number current letter i j)
+	form = sssDefineMatchingForm
+	number = atoi( evalstring(sprintf(nil "%s~>l_DEBUG_SelectedInst~>value" form)) )
+	when( number >= 0
+		current = evalstring( sprintf(nil "%s~>cycItem%d~>value" form number) )
+		for(j 1 form~>sbRows~>value
+			for( i 1 form~>sbColumns~>value
+				letter = evalstring( sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form j i))
+				when( letter == " " SSSDefineMatchingCBChangePattern(j i) )
+			)
+		)
 	)
 );let
 );procedure
@@ -137,7 +206,7 @@ let(
 /*****************
 props = list(
             (pattern)
-            ((name letter) (name letter) ...)
+            ((name letter count) (name letter count) ...)
             (dx dy)
         )
 *****************/
@@ -145,7 +214,7 @@ procedure( SSSDefineMatchingCB(insts)
 let(
 	(
 		cv cellName win wins form
-		(props list()) name letter string pattern shift
+		(props list()) name letter count string pattern shift
 		i j (isEdit nil) (isFound nil)
 	)
     form = sssDefineMatchingForm
@@ -153,11 +222,12 @@ let(
     for( i 0 length(insts)-1
 		name = evalstring(sprintf(nil "%s~>bbItem%d~>_buttonText" form i))
 		letter = evalstring(sprintf(nil "%s~>cycItem%d~>value" form i))
-        props = append1( props list(name letter) )
+		count = atoi( evalstring(sprintf(nil "%s~>lNum%d~>value" form i)) )
+        props = append1( props list(name letter count) )
     )
 	for( j 1 form~>sbRows~>value
 		string = list()
-		for( i 1 form~>sbColumns~>value string = append1(string evalstring(sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form i j))) )
+		for( i 1 form~>sbColumns~>value string = append1(string evalstring(sprintf(nil "%s~>bArrayItem%d%d~>_buttonText" form j i))) )
 		pattern = append1(pattern string)
 	)
     shift = list( form~>ffXSpacing~>value form~>ffYSpacing~>value )

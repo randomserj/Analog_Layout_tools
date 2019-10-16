@@ -1,6 +1,7 @@
-procedure( SSSDefineMatching(@optional props)
-let( ( inst insts )
+procedure( SSSDefineMatching()
+let( ( inst insts props )
 	insts = setof( inst geGetSelSet() inst~>objType == "inst" )
+	props = css()~>matching
 	when( props insts = cadr(props) )
 	if( insts then
 		unless( boundp('sssDefineMatchingForm) && hiIsFormDisplayed(sssDefineMatchingForm)
@@ -14,4 +15,4 @@ let( ( inst insts )
 );procedure
 
 hiSetBindKey( "Schematics" "<Key>F4" "SSSDefineMatching()" )
-hiSetBindKey( "Layout" "<Key>F4" "SSSDefineMatching(css()~>matching)" )
+hiSetBindKey( "Layout" "<Key>F4" "SSSDefineMatching()" )
