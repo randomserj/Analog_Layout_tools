@@ -1,23 +1,3 @@
-/*******************************************************************
-/*
-/*					Some SKILL Scripts features
-/*
-/*	Bindkeys:
-/*
-/*	- <Key>F4 to define matching pattern in the sch
-/*     and build/modify it in the layout
-/*	- <Key>Tab to change grid
-/*	- <Key>1..9 to toggle metals+vias visiability
-/*	- ctrl<Key>1..9 to add/remove metal+via to/from visibility list
-/*	- shift<Key>1..9 to add/remove dummy metal to/from visibility list
-/*	- <Key>0 to toggle FEOL/BEOL layers
-/*	- ctrl<Key>0 to add/remove FEOL layers to/from visibility list
-/*	- shift<Key>0 to add/remove dummy metals layers to/from visibility list
-/*	- <Key>` to show all layers
-/*  - <key>,. to change layer down/up of selected objects
-/*
-/*******************************************************************/
-
 procedure( _SSSLoadConfig()
 let( (cfg_path cfg_file line (info "") (toRead nil) block pin layer layers i )
 	when( infile(strcat(getShellEnvVar("HOME") "/SSS.config"))
@@ -56,6 +36,7 @@ let( (cfg_path cfg_file line (info "") (toRead nil) block pin layer layers i )
 				if( cadr(layer) == "cut" then sssVias = append1(sssVias car(layer)) )
 			)
 			SSSLoadScripts()
+			SSSLoadBindKeys()
 		else
 			SSSPrint( "Tech library is missed" "e" )
 		)

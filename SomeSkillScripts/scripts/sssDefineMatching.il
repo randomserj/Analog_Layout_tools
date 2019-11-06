@@ -13,6 +13,3 @@ let( ( inst insts props )
 	)
 );let
 );procedure
-
-hiSetBindKey( "Schematics" "<Key>F4" "SSSDefineMatching()" )
-hiSetBindKey( "Layout" "<Key>F4" "SSSDefineMatching()" )

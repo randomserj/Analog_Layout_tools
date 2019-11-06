@@ -101,14 +101,3 @@ let( ()
 	sssLayersToToggle = list()
 );let
 );procedure
-
-let( (i limit)
-	limit = min( 9, length(sssBEOL) )
-	for( i 0 limit
-		hiSetBindKey("Layout" sprintf(nil "<Key>%d" i) sprintf(nil "SSSToggleLayerVisibility(%d)" i))
-		hiSetBindKey("Layout" sprintf(nil "Ctrl<Key>%d" i) sprintf(nil "SSSToggleLayerVisibilityCtrl(%d)" i))
-		hiSetBindKey("Layout" sprintf(nil "Shift<Key>%d" i) sprintf(nil "SSSToggleLayerVisibilityShift(%d)" i))
-	)
-	hiSetBindKey("Layout" "<Key>`" "SSSToggleLayerVisibilityALL()")
-	hiSetBindKey("Layout" "<Key>sterling" "SSSToggleLayerVisibilityShift(3)") ;;; silly shift+3 = £
-);let

@@ -29,8 +29,5 @@ let( (obj objs layer ind viaDefs viaNames newVia)
             )
         )
     )
-)
-)
-
-hiSetBindKey("Layout" "<Key>," "SSSChangeLayer(-1)")
-hiSetBindKey("Layout" "<Key>." "SSSChangeLayer(1)")
+);let
+);procedure

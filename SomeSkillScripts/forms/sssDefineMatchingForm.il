@@ -2,7 +2,7 @@ procedure( SSSDefineMatchingForm(insts props)
 let(
 	(
 		size inst field (fields list())
-		name names letter letters (total 0) mult num numleft cols rows i
+		name names letter letters (total 0) mult num numLeft cols rows i
 		DEBUG_INVISIBLE
 	)
 	size = list(360 420)
@@ -22,7 +22,7 @@ let(
 				mult = int( abs(atof(cadr(num)) - atof(car(num))) + 1 )
 			)
 			when( nth(i insts)~>m mult = mult * int(atof(nth(i insts)~>m)) )
-			numleft = mult
+			numLeft = mult
 			total = total + mult
 			letter = nth(i letters)
 		)

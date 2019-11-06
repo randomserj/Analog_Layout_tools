@@ -1,3 +1,0 @@
-sssHome = strcat( skillHome "/SomeSkillScripts" )
-load( strcat( sssHome "/SSS.defaults" ) )
-load( strcat( sssHome "/SSS.il" ) )

@@ -18,6 +18,3 @@ let( (window mfg curGridX curGridY )
     SSSPrint(sprintf(nil "Y grid set to %1.3f" window->ySnapSpacing) "INFO")
 );let
 );procedure
-
-hiSetBindKey( "Layout" "<Key>Tab" "SSSSwitchGrid()" )
-hiSetBindKey( "Layout" "<Key>Tab EF" "SSSSwitchGrid()" )

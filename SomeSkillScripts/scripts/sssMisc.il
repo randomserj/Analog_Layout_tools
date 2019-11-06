@@ -6,3 +6,12 @@ let( ( i (divs list()) )
     divs
 );let
 );procedure
+
+procedure( SSSGetUnique(elements)
+let( ( (uelemnts list()) )
+	foreach( element elements
+	    when( !member(element uelemnts) uelemnts = append1(uelemnts element) )
+	)
+    uelemnts
+);let
+);procedure
